@@ -13,76 +13,44 @@ knitr::opts_chunk$set(
 )
 ```
 
-# NDCN -Omics Browser (name TBC)
+# omicser
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
+The goal of omicser is to ...
 
-## Introduction
+## Installation
 
-The goal of this package is to allow exploration of -omics data using
-an interactive "playground" (e.g., Shiny application),
-accessible through an interactive web browser.
-In addition to the browser package, 
-this project includes documentation about usage, 
-example scripts, 
-and an expository quickstart tutorial to demonstrate how it is to be used.
-The browser package itself contains the code to create/run the browser,
-as well as a small collection of helper functions to aid in curating and configuring datasets for browsing.
+You can install the development version of omicser from [GitHub](https://github.com/) with:
 
-> *Note*:  although the NDCN Omics Browser is not yet officially named, references it as `omicser` or `omxr`.
+``` r
+# install.packages("devtools")
+devtools::install_github("ricoderks/omicser")
+```
 
-There are two types of users for this package:
+## Example
 
-- **Curators**: data analysts who configure the app and prepare datasets for viewing. These individuals should be fairly proficient with R coding, including familiarity with building Shiny apps and knowledgeable about -omics data structures.
-- **Viewers**: scientists who are interested in exploring -omics data using the application. They do not require extensive knowledge about R, but may need to have it installed if they are running the app on their own computer.
+This is a basic example which shows you how to solve a common problem:
 
-The diagram below summarizes the steps required to use this package:
+```{r example}
+library(omicser)
+## basic example code
+```
 
-![Overview of data visualization using the omicser](man/figures/README-omicser-overview.png)
+What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 
-Support for the following _post-QC_ -omics data types has been tested:
+```{r cars}
+summary(cars)
+```
 
-- _transcript_-omics
-- _prote_-omics
-- _metabol_-omics
-- _lipid_-omics
+You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
 
-The package is able to provide the following outputs:
+You can also embed plots, for example:
 
-- images visualizing data
-- subsets of data
-- web application packaged with data that can be shared with collaborators
+```{r pressure, echo = FALSE}
+plot(pressure)
+```
 
-## Installation and usage
-
-This package was developed to create a [`{shiny}`](https://shiny.rstudio.com/) application using  
-[`{golem}`](https://github.com/ThinkR-open/golem), "an opinionated framework for building production-grade shiny applications."
-It requires a number of additional R and Python packages.  The package creates the Shiny browser app as well as several functions for curating and packaging the data being curated.
-
-> **If you would like an overview of the features and functionality of the browser, please view the [Browsing vignette](https://ndcn.github.io/omicser/articles/browsing.html).**
-
-The remaining [vignettes](https://ndcn.github.io/omicser/articles/00_quickstart.html) 
-are designed to walk Curators through the process of installing necessary software, curating data, creating an application, and launching the tool.
-
-## Contributing to this project
-
-This project began as part of the CZI NDCN Open Science Initiative Data Science Pilot (March-Sept 2021).
-
-Please see our [Contributing guidelines](CONTRIBUTING.md)
-for more information on any of the following:
-
-- reporting bugs and problems using the software
-- requesting additional features and functionality
-- submitting your own code or documentation to become a part of this project
-- sharing information about how you've used this package in your own work
-
-Anyone interacting with our project is expected to follow our [Code of Conduct](CODE_OF_CONDUCT.md).
-
-### Roadmap
-
-Please view our [issues](https://github.com/ndcn/omicser/issues),
-especially those tagged as [high priority](https://github.com/ndcn/omicser/issues?q=is%3Aopen+is%3Aissue+label%3A%22high+priority%22),
-for more information about immediate plans for development.
+In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
