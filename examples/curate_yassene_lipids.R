@@ -14,13 +14,13 @@ REPO_PATH <- getwd()
 if (DEV_OMICSER){
   # this should be a full path... e.g. ~/Projects/NDCN_dev/omicser
   # but for github, we will set relative to the repo BASE
-  REPO_PATH <- "/Users/ahenrie/Projects/NDCN_dev/omicser"
-  OMICSER_RUN_DIR <- file.path(REPO_PATH,"quickstart")
+  REPO_PATH <- getwd()
+  OMICSER_RUN_DIR <- file.path(REPO_PATH)
   golem::document_and_reload(pkg = REPO_PATH)
 } else {
 
   require(omicser)
-  OMICSER_RUN_DIR <- file.path(REPO_PATH,"quickstart")
+  OMICSER_RUN_DIR <- file.path(REPO_PATH)
 
 }
 
@@ -32,7 +32,7 @@ omicser_options <- omicser::get_config(in_path = OMICSER_RUN_DIR)
 CONDA_ENV <- omicser_options$conda_environment
 DB_ROOT_PATH <- omicser_options$db_root_path
 
-DB_NAME <-  list("Yassene Lipid concentraions & compositions" ="yassene_lipid")
+DB_NAME <-  list("Yassene Lipid concentrations & compositions" ="yassene_lipid")
 
 if (! (DB_NAME %in% omicser_options$database_names)){
   omicser_options$database_names <- c(omicser_options$database_names,DB_NAME)
@@ -68,7 +68,7 @@ write_db_meta(db_meta,DB_NAME, db_root = DB_ROOT_PATH)
 #==== 2. helper functions =================================================================================
 
 
-prep_lipidizer_files <- function(data_file,path_root){
+prep_lipidizer_files <- function(data_file, path_root){
 
   raw_table <- data.table::fread(file=file.path(path_root,data_file), header=TRUE)
 
@@ -98,14 +98,15 @@ prep_lipidizer_files <- function(data_file,path_root){
   dat_mat[which(is.na(dat_mat), arr.ind = TRUE)] <- 0
 
   ####  marginals on un-scaled data with zeroed NA
-  var_annot$mean <- colMeans(raw,na.rm = TRUE)
-  var_annot$var <- matrixStats::colVars(raw,na.rm = TRUE)
+  var_annot$mean <- colMeans(raw, na.rm = TRUE)
+  var_annot$var <- matrixStats::colVars(raw, na.rm = TRUE)
 
-  obs_meta$var <- matrixStats::rowVars(raw,na.rm = TRUE)
-  obs_meta$mean <-rowMeans(raw,na.rm = TRUE)
+  obs_meta$var <- matrixStats::rowVars(raw, na.rm = TRUE)
+  obs_meta$mean <-rowMeans(raw, na.rm = TRUE)
   # experiment with the scaled (including)
 
-  excess_zero_conc <- ( colSums(dat_mat==0) > 2/3*dim(dat_mat)[1] )
+  # determine which samples contain a lot of zero's
+  excess_zero_conc <- ( colSums(dat_mat == 0) > 2/3 * dim(dat_mat)[1] )
   var_annot$excess_zero_conc <- excess_zero_conc
   # var annotation
   #poor_conc <- which(colSums(conc_mat==0) > 2/3*dim(conc_mat)[1])
@@ -129,17 +130,17 @@ prep_lipidizer_files <- function(data_file,path_root){
 
 #==== 3. load data -========================================================================================
 
-RAW_DIR <- file.path(OMICSER_RUN_DIR,"raw_data", "Yassene_A")
+RAW_DIR <- file.path(OMICSER_RUN_DIR, "examples", "raw_data", "yassene_data")
 
 
 # a. load concentration data --------------------
 
 conc_csv_name <- "example_species_conc.csv"
-conc_dat_list <- prep_lipidizer_files(conc_csv_name,RAW_DIR)
+conc_dat_list <- prep_lipidizer_files(conc_csv_name, RAW_DIR)
 # b. load composition data --------------------
 #
 comp_csv_name <- "example_composition.csv"
-comp_dat_list <- prep_lipidizer_files(comp_csv_name,RAW_DIR)
+comp_dat_list <- prep_lipidizer_files(comp_csv_name, RAW_DIR)
 
 
 #==== 4. pack into anndata =========================================================================
@@ -147,28 +148,27 @@ comp_dat_list <- prep_lipidizer_files(comp_csv_name,RAW_DIR)
 # helper_function<-('data-raw/ingest_helpers.R')
 # source(helper_function)
 
-
-
 DB_NAME = "yassene_lipid"
 
-conc <- omicser::setup_database(database_name=DB_NAME,
-                                db_path=DB_ROOT_PATH,
-                                data_in=conc_dat_list,
-                                db_meta=NULL ,
-                                re_pack=TRUE)
+# concentrations
+conc <- omicser::setup_database(database_name = DB_NAME,
+                                db_path = DB_ROOT_PATH,
+                                data_in = conc_dat_list,
+                                db_meta = NULL ,
+                                re_pack = TRUE)
+# composition
+comp <- omicser::setup_database(database_name = DB_NAME,
+                                db_path = DB_ROOT_PATH,
+                                data_in = comp_dat_list,
+                                db_meta = NULL ,
+                                re_pack = TRUE)
 
-comp <- omicser::setup_database(database_name=DB_NAME,
-                                db_path=DB_ROOT_PATH,
-                                data_in=comp_dat_list,
-                                db_meta=NULL ,
-                                re_pack=TRUE)
-
-ad<- conc$copy()
+ad <- conc$copy()
 raw <- ad$copy()
 raw$X <- conc_dat_list$raw
 ad$raw <- raw
-ad$layers <- list(composition=comp$X,
-                  raw_comp=comp_dat_list$raw)
+ad$layers <- list(composition = comp$X,
+                  raw_comp = comp_dat_list$raw)
 
 
 ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"core_data.h5ad"))
@@ -249,53 +249,65 @@ ad$varm$comp_PCs <- comp$varm$PCs
 ad$obsp$comp_distances <- comp$obsp$distances
 ad$obsp$comp_connectivities <- comp$obsp$connectivities
 # save an intermediate file (incase we want to revert...)
-ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"norm_data_plus_dr.h5ad"))
+ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME, "norm_data_plus_dr.h5ad"))
 
 
 #==== 6. differential expression  ======================================================================
 
-test_types <- c('wilcoxon','t-test_overestim_var')
+test_types <- c("wilcoxon",
+                "t-test_overestim_var")
 
-comp_types <- c("grpVrest")
-obs_names <- c('Group','leiden')
+comp_types <- c("{LEAN}V{OBESE}",
+                "{LEAN}V{OBESE+VLCD}",
+                "{OBESE}V{OBESE+VLCD}")
+obs_names <- c("Group")
 
-diff_exp <- omicser::compute_de_table(ad,comp_types, test_types, obs_names,sc)
+diff_exp <- omicser::compute_de_table(adata = ad,
+                                      comp_types = comp_types,
+                                      test_types = test_types,
+                                      obs_names = obs_names,
+                                      sc = sc)
+
+# remove infinite values and NaN's
+diff_exp <- diff_exp %>%
+  filter(!is.infinite(logfoldchanges),
+         !is.nan(logfoldchanges))
 
 
-ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"norm_data_with_de.h5ad"))
+ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME, "norm_data_with_de.h5ad"))
 saveRDS(diff_exp, file = file.path(DB_ROOT_PATH,DB_NAME, "db_de_table.rds"))
 
 #==== 7. create configs =========================================================================
 # what ad$obs do we want to make default values for...
 
 config_list <- list(
-  x_obs = c('Group','leiden' ),
-  y_obs = c('var', 'mean'), #MEASURES
-  obs_groupby = c('Group','leiden'),
-  obs_subset = c('Group','leiden' ),
-  x_var = c('excess_zero_conc', 'sig_lasso_coef',"decile"),
-  y_var = c('mean', 'var'),
-  var_groupby = c("highly_variable","decile"),
-  var_subset = c("highly_variable","decile"),  # NOTE:  <omic selector> is NOT in the data object so its not actually going to load
+  x_obs = c("Group"),
+  y_obs = c("var", "mean"), #MEASURES
+  obs_groupby = c("Group"),
+  obs_subset = c("Group"),
+  x_var = c("excess_zero_conc", "sig_lasso_coef"),
+  y_var = c("mean", "var"),
+  var_groupby = c("highly_variable"),
+  var_subset = c("highly_variable"),  # NOTE:  <omic selector> is NOT in the data object so its not actually going to load
 
-  layers = c("X","raw",'composition','raw_comp'),
+  layers = c("X","raw","composition","raw_comp"),
 
   diffs = list(diff_exp_comps = levels(factor(diff_exp$versus)),
-               diff_exp_comp_type =  levels(factor(diff_exp$comp_type)), #i don't think we need this
+               diff_exp_comp_type =  levels(factor(diff_exp$comp_type)), #i don"t think we need this
                diff_exp_obs_name =  levels(factor(diff_exp$obs_name)),
                diff_exp_tests =  levels(factor(diff_exp$test_type))
   ),
 
 
   # Dimred
-  dimreds = list(obsm = c('X_pca', 'X_umap', 'comp_X_pca', 'comp_X_umap'),
-                 varm = c('PCs', 'comp_PCs')),
+  dimreds = list(obsm = c("X_pca", "X_umap", "comp_X_pca", "comp_X_umap"),
+                 varm = c("PCs", "comp_PCs")),
 
   # what ad$obs do we want to make default values for...
   # # should just pack according to UI?
-  default_factors = c('Group', 'leiden', 'Group'),
+  default_factors = c("Group"),
   target_omics = target_omics,
-  omic_details = c('omics_name', 'mean', 'var', 'excess_zero_conc', 'sig_lasso_coef', 'var_rank', 'decile')
+  omic_details = c("omics_name", "mean", "var", "excess_zero_conc", "sig_lasso_coef", "var_rank", "decile")
 
 )
 
