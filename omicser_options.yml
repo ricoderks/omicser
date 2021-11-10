@@ -2,5 +2,5 @@ database_names:
     Domenico DIA: domenico_stem_cell
     Yassene Lipid concentraions & compositions: yassene_lipid
 db_root_path: inst/DB
-conda_environment: renv-python
+conda_environment: .pyenv
 conda_exe: auto
