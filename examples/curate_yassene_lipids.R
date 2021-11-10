@@ -226,30 +226,30 @@ ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"normalized_data.h5ad"))
 
 ## Step 3: Do some basic preprocessing to run PCA and compute the neighbor graphs
 ##
-
-comp <- ad$copy()
-comp$X <- ad$layers$get('composition')
-sc$pp$pca(comp)
-sc$pp$neighbors(comp)
-## Step 4: Infer clusters with the leiden algorithm
-sc$tl$leiden(comp)
-## Step 5: Compute tsne and umap embeddings
-sc$tl$umap(comp)
-
-
-sc$pp$pca(ad)
-sc$pp$neighbors(ad)
-sc$tl$leiden(ad)
-sc$tl$umap(ad)
-
-
-ad$obsm$comp_X_pca <- comp$obsm$X_pca
-ad$obsm$comp_X_umap <- comp$obsm$X_umap
-ad$varm$comp_PCs <- comp$varm$PCs
-ad$obsp$comp_distances <- comp$obsp$distances
-ad$obsp$comp_connectivities <- comp$obsp$connectivities
-# save an intermediate file (incase we want to revert...)
-ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME, "norm_data_plus_dr.h5ad"))
+#
+# comp <- ad$copy()
+# comp$X <- ad$layers$get('composition')
+# sc$pp$pca(comp)
+# sc$pp$neighbors(comp)
+# ## Step 4: Infer clusters with the leiden algorithm
+# sc$tl$leiden(comp)
+# ## Step 5: Compute tsne and umap embeddings
+# sc$tl$umap(comp)
+#
+#
+# sc$pp$pca(ad)
+# sc$pp$neighbors(ad)
+# sc$tl$leiden(ad)
+# sc$tl$umap(ad)
+#
+#
+# ad$obsm$comp_X_pca <- comp$obsm$X_pca
+# ad$obsm$comp_X_umap <- comp$obsm$X_umap
+# ad$varm$comp_PCs <- comp$varm$PCs
+# ad$obsp$comp_distances <- comp$obsp$distances
+# ad$obsp$comp_connectivities <- comp$obsp$connectivities
+# # save an intermediate file (incase we want to revert...)
+# ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME, "norm_data_plus_dr.h5ad"))
 
 
 #==== 6. differential expression  ======================================================================
@@ -269,6 +269,7 @@ diff_exp <- omicser::compute_de_table(adata = ad,
                                       sc = sc)
 
 # remove infinite values and NaN's
+library(tidyverse)
 diff_exp <- diff_exp %>%
   filter(!is.infinite(logfoldchanges),
          !is.nan(logfoldchanges))
