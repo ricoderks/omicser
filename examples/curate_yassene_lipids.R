@@ -216,7 +216,7 @@ ad$var$var_rank <- order(ad$var$var)
 # choose top 40 proteins by variance across dataset as our "targets"
 target_omics <- ad$var_names[which(ad$var$var_rank <= 40)]
 
-ad$var$decile <- dplyr::ntile(ad$var$var, 10)
+# ad$var$decile <- dplyr::ntile(ad$var$var, 10)
 
 
 # save an intermediate file (incase we want to revert...)
@@ -308,7 +308,7 @@ config_list <- list(
   # # should just pack according to UI?
   default_factors = c("Group"),
   target_omics = target_omics,
-  omic_details = c("omics_name", "mean", "var", "excess_zero_conc", "sig_lasso_coef", "var_rank", "decile")
+  omic_details = c("omics_name", "mean", "var", "excess_zero_conc", "sig_lasso_coef", "var_rank")
 
 )
 
