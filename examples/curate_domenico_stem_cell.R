@@ -10,12 +10,12 @@ DEV_OMICSER <- TRUE
 if (DEV_OMICSER){
   # this should be a full path... e.g. ~/Projects/NDCN_dev/omicser
   # but for github, we will set relative to the repo BASE
-  REPO_PATH <- "/Users/ahenrie/Projects/NDCN_dev/omicser"
-  OMICSER_RUN_DIR <- file.path(REPO_PATH,"quickstart")
+  REPO_PATH <- getwd()
+  OMICSER_RUN_DIR <- file.path(REPO_PATH)
   golem::document_and_reload(pkg = REPO_PATH)
 } else {
   require(omicser)
-  OMICSER_RUN_DIR <- file.path(REPO_PATH,"quickstart")
+  OMICSER_RUN_DIR <- file.path(REPO_PATH)
 }
 
 # BOOTSTRAP the options we have already set up...
@@ -217,7 +217,7 @@ prep_DIA_files <- function(matrix_data_file,annot_de_file,conditions_table_file,
 
 #==== 3. load data -========================================================================================
 
-RAW_DIR <- file.path(OMICSER_RUN_DIR,"raw_data", "Domenico_A")
+RAW_DIR <- file.path(OMICSER_RUN_DIR, "examples", "raw_data", "Domenico_A")
 
 # report table
 matrix_data_file <- "20210524_093609_170805_aging_against_SC_merged_all_lib_2_Report.xls"
