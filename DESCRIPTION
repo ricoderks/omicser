@@ -11,7 +11,7 @@ Imports:
     attempt,
     broom,
     Cairo,
-    ComplexHeatmap (>= 2.9.4),
+    ComplexHeatmap (>= 2.11.1),
     configr,
     data.table,
     dplyr,

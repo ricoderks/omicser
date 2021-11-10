@@ -64,14 +64,25 @@ cmd <- c("/Users/ahenrie/Library/r-miniconda/bin/conda create -y -p /Users/ahenr
             "pip seaborn scikit-learn statsmodels numba pytables python-igraph leidenalg scanpy",
             "-c conda-forge -c bioconda ", "&& /Users/ahenrie/Library/r-miniconda/bin/conda env export -p /Users/ahenrie/Projects/NDCN_dev/omicser/.pyenv > environment.yml")
 
+################################
+# Rico: for use on my laptop -> this worked
+# "/home/ricoderks/.local/share/r-miniconda/bin/conda"
+# "/home/ricoderks/Documents/LUMC/Projects/omicser/.pyenv"
+cmd <- c("/home/ricoderks/.local/share/r-miniconda/bin/conda create -y -p /home/ricoderks/Documents/LUMC/Projects/omicser/.pyenv python=3.9",
+         "pip seaborn scikit-learn statsmodels numba pytables python-igraph leidenalg scanpy",
+         "-c conda-forge -c bioconda ",
+         "&& /home/ricoderks/.local/share/r-miniconda/bin/conda env export -p /home/ricoderks/Documents/LUMC/Projects/omicser/.pyenv > environment.yml")
+
+
 base::system(command = paste(cmd, collapse = " "))
+######################################
 
 # python management fails with renv... so probably the first way is the "correct way to install things
 #
 #
 
 CONDA_ENV <- "" #"/Users/ahenrie/Library/r-miniconda/envs/omxr/bin/python"
-CONDA_ENV <-"/Users/ahenrie/Projects/NDCN_dev/omicser/.pyenv" # avoide sicne we have two omxr
+CONDA_ENV <-"/home/ricoderks/Documents/LUMC/Projects/omicser/.pyenv" # avoide sicne we have two omxr
 CONDA_EXE <- reticulate::conda_binary()
 reticulate::use_condaenv( required = TRUE,
                           condaenv = CONDA_ENV,
@@ -82,11 +93,11 @@ reticulate::py_config()
 
 
 CONDA_ENV <- "omxr" #"/Users/ahenrie/Library/r-miniconda/envs/omxr/bin/python"
-CONDA_ENV <-"/Users/ahenrie/Library/r-miniconda/envs/omxr" # avoide sicne we have two omxr
-CONDA_EXE <- "/Users/ahenrie/Library/r-miniconda/bin/conda" #reticulate::conda_binary()
+CONDA_ENV <-"/home/ricoderks/.local/share/r-miniconda/envs/omxr" # avoide sicne we have two omxr
+CONDA_EXE <- "/home/ricoderks/.local/share/r-miniconda/bin/conda" #reticulate::conda_binary()
 
 #CONDA_PY_PATH: "/Users/ahenrie/Library/r-miniconda/envs/omxr/bin/python"
-renv::use_python(python = "/Users/ahenrie/Library/r-miniconda/envs/omxr/bin/python", type = "conda")
+renv::use_python(python = "/home/ricoderks/.local/share/r-miniconda/envs/omxr/bin/python", type = "conda")
 # can i encapsulate a miniconda in the environment???
 #reticulate::install_miniconda()
 
