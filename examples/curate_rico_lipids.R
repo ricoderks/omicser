@@ -36,7 +36,7 @@ DB_NAME <-  list("lipid conc." = "rico_lipid")
 
 if (! (DB_NAME %in% omicser_options$database_names)){
   omicser_options$database_names <- c(omicser_options$database_names, DB_NAME)
-  omicser::write_config(in.options = omicser_options,
+  omicser::write_config(in_options = omicser_options,
                         in_path = OMICSER_RUN_DIR )
 }
 
@@ -70,34 +70,43 @@ prep_lipidizer_files <- function(data_file, path_root){
   raw_table <- data.table::fread(file = file.path(path_root, data_file),
                                  header = TRUE)
 
+  # remove empty groups, in this case this is the QC
+  raw_table <- raw_table[raw_table$Group != "", ]
+  # get the group information of the samples
   exp_group <- raw_table$Group
-  exp_group[exp_group == ""] <- "QC"  #i"m not sure this is true
 
+  # observation annotations
   meta_cols <- c("Name", "Group")
   obs_meta <- raw_table[, c("Name", "Group")]
   obs_meta$Group <- exp_group
   rownames(obs_meta) <- raw_table$Name
 
-
+  # create the matrix
   dat_mat <- raw_table[, !c("Name", "Group")]
   dat_mat <- as.matrix(dat_mat)
   rownames(dat_mat) <- obs_meta$Name
 
   class(dat_mat) <- "numeric"
 
-  # make var_annots
-  lipids = colnames(dat_mat)
-  var_annot <- as.data.frame(lipids)
-  rownames(var_annot) <- var_annot$lipids
-
+  # keep the original data
   raw <- dat_mat
   # zero out NA: is this tricky because its sparse?
   dat_mat[which(is.na(dat_mat), arr.ind = TRUE)] <- 0
 
+  # make variable annotations (lipids)
+  lipids <- colnames(dat_mat)
+  var_annot <- as.data.frame(lipids)
+  rownames(var_annot) <- var_annot$lipids
+  # and add the lipid class
+  # var_annot$lipid_class <- stringr::str_extract(string = var_annot$lipids,
+  #                                               pattern = "^[a-zA-Z]*")
+
   ####  marginals on un-scaled data with zeroed NA
+  # calculate the mean and variance for the variables
   var_annot$mean <- colMeans(raw, na.rm = TRUE)
   var_annot$var <- matrixStats::colVars(raw, na.rm = TRUE)
 
+  # calculate the mean and variance for the observations, but this is for all samples together!! WHY?
   obs_meta$var <- matrixStats::rowVars(raw, na.rm = TRUE)
   obs_meta$mean <-rowMeans(raw, na.rm = TRUE)
   # experiment with the scaled (including)
@@ -161,14 +170,16 @@ conc <- omicser::setup_database(database_name = DB_NAME,
 
 # make a copy of conc
 ad <- conc$copy()
-raw <- ad$copy()
-raw$X <- conc_dat_list$raw
-ad$raw <- raw
-ad$layers <- list(composition = comp$X,
-                  raw_comp = comp_dat_list$raw)
+# add raw data, don't do this now. It contains NA's
+# raw <- ad$copy()
+# raw$X <- conc_dat_list$raw
+# ad$raw <- raw
+# add the composition
+# ad$layers <- list(composition = comp$X,
+#                   raw_comp = comp_dat_list$raw)
 
 
-ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"core_data.h5ad"))
+ad$write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "core_data.h5ad"))
 
 
 
@@ -179,32 +190,32 @@ sc <- reticulate::import("scanpy")
 
 # 5a. lasso regression to choose sig ----------------------------
 #ZSCALE the matrix
-dat_mat <- scale(ad$X) #including zeros
-test_vals <- dat_mat
-regr_group <- ad$obs$Group
-g <- unique(regr_group)
-# g
+# dat_mat <- scale(ad$X) #including zeros
+# test_vals <- dat_mat
+# regr_group <- ad$obs$Group
+# g <- unique(regr_group)
+# # g
+# #
+# regr_group <- as.numeric(factor(ad$obs$Group))
+# ind_rem_group <- which(regr_group == which(table(regr_group) < 3))
 #
-regr_group <- as.numeric(factor(ad$obs$Group))
-ind_rem_group <- which(regr_group == which(table(regr_group) < 3))
-
-# remove groups with less than 3 observations..
-if (length(ind_rem_group) > 0) {
-  test_vals <- test_vals[-ind_rem_group, ]
-  regr_group <- regr_group[-ind_rem_group]
-}
-
-# choose the "significant" columns via lasso regression (glmnet)
-set.seed(100)
-cvfit <- glmnet::cv.glmnet(test_vals, regr_group, nlambda = 100, alpha = .8, family = "multinomial", type.multinomial = "grouped")
-coef <- coef(cvfit, s = "lambda.min")
-tmp <- as.matrix(coef$"1")
-tmp1 <- tmp[which(tmp != 0)]
-coef_names <- rownames(tmp)[which(tmp != 0)][-1]
-ind_coef <- which(colnames(test_vals) %in% coef_names)
-
-ad$var$sig_lasso_coef <- (colnames(test_vals) %in% coef_names)
-ad$uns <- list(comp_lasso_coef=coef)
+# # remove groups with less than 3 observations..
+# if (length(ind_rem_group) > 0) {
+#   test_vals <- test_vals[-ind_rem_group, ]
+#   regr_group <- regr_group[-ind_rem_group]
+# }
+#
+# # choose the "significant" columns via lasso regression (glmnet)
+# set.seed(100)
+# cvfit <- glmnet::cv.glmnet(test_vals, regr_group, nlambda = 100, alpha = .8, family = "multinomial", type.multinomial = "grouped")
+# coef <- coef(cvfit, s = "lambda.min")
+# tmp <- as.matrix(coef$"1")
+# tmp1 <- tmp[which(tmp != 0)]
+# coef_names <- rownames(tmp)[which(tmp != 0)][-1]
+# ind_coef <- which(colnames(test_vals) %in% coef_names)
+#
+# ad$var$sig_lasso_coef <- (colnames(test_vals) %in% coef_names)
+# ad$uns <- list(comp_lasso_coef=coef)
 
 
 #  don"t know how to make this work....
@@ -217,7 +228,7 @@ target_omics <- ad$var_names[which(ad$var$var_rank <= 40)]
 
 
 # save an intermediate file (incase we want to revert...)
-ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"normalized_data.h5ad"))
+ad$write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "normalized_data.h5ad"))
 
 #==== 5-a. dimension reduction - PCA / umap =========================================================================
 
@@ -246,7 +257,7 @@ ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"normalized_data.h5ad"))
 # ad$obsp$comp_distances <- comp$obsp$distances
 # ad$obsp$comp_connectivities <- comp$obsp$connectivities
 # # save an intermediate file (incase we want to revert...)
-# ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME, "norm_data_plus_dr.h5ad"))
+# ad$write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "norm_data_plus_dr.h5ad"))
 
 
 #==== 6. differential expression  ======================================================================
@@ -283,36 +294,36 @@ config_list <- list(
   y_obs = c("var", "mean"), #MEASURES
   obs_groupby = c("Group"),
   obs_subset = c("Group"),
-  x_var = c("excess_zero_conc", "sig_lasso_coef"),
+  x_var = c("excess_zero_conc"), #c("excess_zero_conc", "sig_lasso_coef"),
   y_var = c("mean", "var"),
   var_groupby = c("highly_variable"),
   var_subset = c("highly_variable"),  # NOTE:  <omic selector> is NOT in the data object so its not actually going to load
 
-  layers = c("X","raw","composition","raw_comp"),
+  layers = c("X"),
 
   diffs = list(diff_exp_comps = levels(factor(diff_exp$versus)),
-               diff_exp_comp_type =  levels(factor(diff_exp$comp_type)), #i don"t think we need this
-               diff_exp_obs_name =  levels(factor(diff_exp$obs_name)),
-               diff_exp_tests =  levels(factor(diff_exp$test_type))
+               diff_exp_comp_type = levels(factor(diff_exp$comp_type)), #i don"t think we need this
+               diff_exp_obs_name = levels(factor(diff_exp$obs_name)),
+               diff_exp_tests = levels(factor(diff_exp$test_type))
   ),
 
 
   # Dimred
-  dimreds = list(obsm = c("X_pca", "X_umap", "comp_X_pca", "comp_X_umap"),
-                 varm = c("PCs", "comp_PCs")),
+  # dimreds = list(obsm = c("X_pca", "X_umap", "comp_X_pca", "comp_X_umap"),
+  #                varm = c("PCs", "comp_PCs")),
 
   # what ad$obs do we want to make default values for...
   # # should just pack according to UI?
   default_factors = c("Group"),
   target_omics = target_omics,
-  omic_details = c("omics_name", "mean", "var", "excess_zero_conc", "sig_lasso_coef", "var_rank")
+  omic_details = c("omics_name", "mean", "var", "excess_zero_conc") #c("omics_name", "mean", "var", "excess_zero_conc", "sig_lasso_coef", "var_rank")
 
 )
 
-
-
-omicser::write_db_conf(config_list,DB_NAME, db_root = DB_ROOT_PATH)
+omicser::write_db_conf(config_list = config_list,
+                       db_name = DB_NAME,
+                       db_root = DB_ROOT_PATH)
 
 #==== 8. write data file to load  =========================================================================
-ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"db_data.h5ad"))
+ad$write_hh55ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "db_data.h5ad"))
 
