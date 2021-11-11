@@ -13,3 +13,5 @@ inst/doc
 /doc/
 /Meta/
 docs
+inst/DB
+examples/raw_data
