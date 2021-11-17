@@ -19,29 +19,29 @@ mod_ingestor_ui <- function(id) {
       column(width = 3,
              offset = 0,
              selectizeInput(ns("SI_database"),
-                              "Choose Database",
-                              "", multiple=FALSE, options = list(placeholder = " database first")
-                              )
-             ),
+                            "Choose Database",
+                            "", multiple=FALSE, options = list(placeholder = " database first")
+             )
+      ),
       column(width = 2,
              offset = 0,
              shinyjs::disabled(
-             actionButton(ns("AB_ingest_load"), label = "Load Data", class = "btn btn-large btn-danger")
-                    ),
+               actionButton(ns("AB_ingest_load"), label = "Load Data", class = "btn btn-large btn-danger")
+             ),
              br(),
              "   loaded data |------> "
-             ),
+      ),
       column(width = 3,
              offset = 0,
              uiOutput(ns("ui_data_meta"))
-            )
+      )
     ),
     fluidRow(
       column(width = 3,
              offset = 0,
              actionButton(ns("AB_add_database_load"), label = "Add Database", class = "btn btn-large btn-danger")
-             )
-      ),
+      )
+    ),
     hr(style = "border-top: 1px dashed grey;"),
     fluidRow(
       column(width = 4,
@@ -52,62 +52,62 @@ mod_ingestor_ui <- function(id) {
              fluidRow(
                column(6,
                       selectizeInput(
-                               ns("SI_exp_fact"), "experimental factors (grouping)", "",
-                               multiple=TRUE, options = list(placeholder = "Choose sample factors")
-                             )),
+                        ns("SI_exp_fact"), "experimental factors (grouping)", "",
+                        multiple=TRUE, options = list(placeholder = "Choose sample factors")
+                      )),
                column(6,
                       selectizeInput(
-                           ns("SI_exp_annot"), "sample annotation (heatmap)", "",
-                           multiple=TRUE, options = list(placeholder = "Choose sample-meta annotations (heatmap)")
-                         )
+                        ns("SI_exp_annot"), "sample annotation (heatmap)", "",
+                        multiple=TRUE, options = list(placeholder = "Choose sample-meta annotations (heatmap)")
+                      )
                )
              ),
              hr(style = "border-top: 1px dashed grey;"),
              h4("feature meta (var)"),
              fluidRow(
                column(6,
-               selectizeInput(
-                 ns("SI_omic_feat"), "omic feature groups", "",
-                 multiple=TRUE, options = list(placeholder = "Choose omic feature groups")
-               )),
+                      selectizeInput(
+                        ns("SI_omic_feat"), "omic feature groups", "",
+                        multiple=TRUE, options = list(placeholder = "Choose omic feature groups")
+                      )),
                column(6,
-                 selectizeInput(
-                 ns("SI_feat_annot"), "feature annotation (heatmap)", "",
-                 multiple=TRUE, options = list(placeholder = "Choose omic feature annotatins (heatmap)")
-               ))
-              ),
-               hr(style = "border-top: 1px dashed grey;"),
+                      selectizeInput(
+                        ns("SI_feat_annot"), "feature annotation (heatmap)", "",
+                        multiple=TRUE, options = list(placeholder = "Choose omic feature annotatins (heatmap)")
+                      ))
+             ),
+             hr(style = "border-top: 1px dashed grey;"),
 
              fluidRow(
                column(6,
                       selectizeInput(
-                             ns("SI_feat_deets"), "feature details", "",
-                             multiple=TRUE, options = list(placeholder = "Choose omic feature meta-info")
-                           )
+                        ns("SI_feat_deets"), "feature details", "",
+                        multiple=TRUE, options = list(placeholder = "Choose omic feature meta-info")
+                      )
                ),
                column(6,
                       HTML("<b>feature filtering variable</b>"),br(),
                       checkboxInput(ns("CB_fano_fact"), "calculate? (relative variance)", value = TRUE),
 
-                    shinyjs::disabled(
-                           selectizeInput(
-                             ns("SI_feature_filter"), "filter variable", "",
-                             multiple=FALSE, options = list(placeholder = "Choose omic feature for filtering `highly variable`")
-                           )),
+                      shinyjs::disabled(
+                        selectizeInput(
+                          ns("SI_feature_filter"), "filter variable", "",
+                          multiple=FALSE, options = list(placeholder = "Choose omic feature for filtering `highly variable`")
+                        )),
 
-                    br(),br(),
-                    shinyjs::disabled(
-                      actionButton(ns("AB_update_defaults"), label = "Update Defaults", class = "btn btn-large btn-danger")
-                    )
+                      br(),br(),
+                      shinyjs::disabled(
+                        actionButton(ns("AB_update_defaults"), label = "Update Defaults", class = "btn btn-large btn-danger")
+                      )
                )
              )
-          ),
+      ),
 
-          column(width = 8,
-                 offset = 0,
-                 mod_additional_info_ui(id = ns("additional_info_ui_ingest"), title = "Databse Information")
-          )
-     )
+      column(width = 8,
+             offset = 0,
+             mod_additional_info_ui(id = ns("additional_info_ui_ingest"), title = "Databse Information")
+      )
+    )
 
 
   ) #tagList
@@ -143,10 +143,10 @@ mod_ingestor_server <- function(id) {
 
     # vetted values
     db <- reactiveValues(name=NULL, #current
-                              dir=NULL, #current
-                              root=NULL, #db_root
-                              list=NULL, #all databases
-                              regenerate=FALSE)
+                         dir=NULL, #current
+                         root=NULL, #db_root
+                         list=NULL, #all databases
+                         regenerate=FALSE)
 
     #instead of shinyFiles i could use find .hd5 and strip of the two parents in the path...
     shinyFiles::shinyDirChoose(input, "database_root_path", roots = c(shinyFiles::getVolumes()()), session = session, allowDirCreate = FALSE)
@@ -211,11 +211,11 @@ mod_ingestor_server <- function(id) {
       req(db$root)
       trig2 <- isolate(modal_db_info$db_trig )
       if ( !any(modal_db_info$db_names != "UNDEFINED") ) {
-          modal_db_info$db_trig <- trig2 + 1
-          message(paste0("trigger2: ",trig2))
-        } else {
-          db$list <- isolate(modal_db_info$db_names)
-        }
+        modal_db_info$db_trig <- trig2 + 1
+        message(paste0("trigger2: ",trig2))
+      } else {
+        db$list <- isolate(modal_db_info$db_names)
+      }
 
     })
 
@@ -253,7 +253,7 @@ mod_ingestor_server <- function(id) {
           selectizeInput(
             ns("database_folder"), "Database Folder",  choices = in_db_dirs, selected = in_db_dirs[1],
             multiple=FALSE
-            ),
+          ),
 
           textInput(ns("txt_database_name"),label = "Database Name", placeholder="what to call it"),
           actionButton(ns("ab_add_database_name"), label= "Add Database!", icon = NULL, width = NULL),
@@ -262,7 +262,7 @@ mod_ingestor_server <- function(id) {
         ))
         modal_db_info$finished_db_name <- FALSE # assert
 
-    },ignoreInit = TRUE
+      },ignoreInit = TRUE
     )
 
     # Modal 1
@@ -306,9 +306,9 @@ mod_ingestor_server <- function(id) {
       if (length(selected_root)>0){
         if (dir.exists(paths = selected_root)){
           modal_db_info$db_root <- selected_root
-          }
-        } else {
-          message("no db chosen yet..")
+        }
+      } else {
+        message("no db chosen yet..")
       }
 
     })
@@ -431,7 +431,7 @@ mod_ingestor_server <- function(id) {
     ## load dataset (observeEvent) ===================
     #observeEvent(input$SI_database, {
     observe({
-        req(input$SI_database)
+      req(input$SI_database)
       db$dir <- input$SI_database
       db$name <- names(which(db$list==input$SI_database))
       # zero out the data_meta until we "load"
@@ -489,99 +489,100 @@ mod_ingestor_server <- function(id) {
       shinyjs::enable("AB_update_defaults")
 
 
-    ## observes ===================
-    observe({
-      if ( !is.null( db$name ) ) {
-        shinyjs::enable("AB_ingest_load")
-      } else {
-        shinyjs::disable("AB_ingest_load")
-        message(" no database loaded yet... .")
-      }
-    })
-
-    observe({
-      if ( input$CB_fano_fact ) {
-        shinyjs::disable("SI_feature_filter")
-        # compute and set ? value??
-
-      } else {
-        shinyjs::enable("SI_feature_filter")
-        message(" choose.. .")
-      }
-    })
-
-    # update defaults: write to configuration
-    observeEvent(input$AB_update_defaults, {
-      # all other return values set with SI_database
-
-      # use a modal?  or simply send everything from the ingest UI as update?
-
-
-      #
-      }
-    )
-
-    # keep these up to date for side_select..
-    # # Should this just be done in     observeEvent(input$SI_database,?
-
-    # load button :: send the reactive object over to the side selector.
-    observeEvent(input$AB_ingest_load, {
-      # all other return values set with SI_database
-      # TODO: FIXE CONF_DEF TABLE with the new selections...
-      to_return$de <- temp_rv$de
-      to_return$anndata <- temp_rv$anndata
-      to_return$config <- temp_rv$config
-      to_return$default <- temp_rv$default
-
-
-      to_return$db_meta$name<-db$name
-      to_return$db_meta$db_dir<-db$dir
-
-      to_return$db_meta$omics_type<-temp_rv$default$db_meta$omic_type
-      to_return$db_meta$measurment<-temp_rv$default$db_meta$measurement
-      to_return$db_meta$organism<-temp_rv$default$db_meta$organizm
-      to_return$db_meta$publication<-temp_rv$default$db_meta$pub
-      to_return$db_meta$etc<-temp_rv$default$db_meta$annotation_database
-
-      to_return$trigger <- to_return$trigger + 1
-
-
-
-      shaddow_defs$exp_fact <- input$SI_exp_fact
-      shaddow_defs$exp_annot <- input$SI_exp_annot
-      shaddow_defs$omic_feat <- input$SI_omic_feat
-      shaddow_defs$feat_annot <- input$SI_feat_annot
-      shaddow_defs$feat_deets  <- input$SI_feat_deets
-      shaddow_defs$feature_filter  <- if (input$CB_fano_fact) "fano factor" else input$SI_feature_filter
-
-
-      to_return$shaddow_defs <- shaddow_defs
-      to_return$fano_factor <- temp_rv$fano_factor
-
-
-      # will this work?  or is the "observing" affecting a reactive with this render?
-      output$ui_data_meta <- renderUI({
-        out_text <- HTML(paste("from the <i>", temp_rv$default$db_meta$lab),"</i> lab")
-        ret_tags <-  tagList(
-          h4(to_return$db_meta$omics_type),
-          #"some more text",
-          out_text,
-          br()
-        )
-        return( ret_tags )
+      ## observes ===================
+      observe({
+        if ( !is.null( db$name ) ) {
+          shinyjs::enable("AB_ingest_load")
+        } else {
+          shinyjs::disable("AB_ingest_load")
+          message(" no database loaded yet... .")
+        }
       })
 
+      observe({
+        if ( input$CB_fano_fact ) {
+          shinyjs::disable("SI_feature_filter")
+          # compute and set ? value??
+
+        } else {
+          shinyjs::enable("SI_feature_filter")
+          message(" choose.. .")
+        }
+      })
+
+      # update defaults: write to configuration
+      observeEvent(input$AB_update_defaults, {
+        # all other return values set with SI_database
+
+        # use a modal?  or simply send everything from the ingest UI as update?
+
+
+        #
+      }
+      )
+
+      # keep these up to date for side_select..
+      # # Should this just be done in     observeEvent(input$SI_database,?
+
+      # load button :: send the reactive object over to the side selector.
+      observeEvent(input$AB_ingest_load, {
+        # all other return values set with SI_database
+        # TODO: FIXE CONF_DEF TABLE with the new selections...
+        to_return$de <- temp_rv$de
+        to_return$anndata <- temp_rv$anndata
+        to_return$config <- temp_rv$config
+        to_return$default <- temp_rv$default
+
+
+        to_return$db_meta$name<-db$name
+        to_return$db_meta$db_dir<-db$dir
+
+        to_return$db_meta$omics_type<-temp_rv$default$db_meta$omic_type
+        to_return$db_meta$measurment<-temp_rv$default$db_meta$measurement
+        to_return$db_meta$organism<-temp_rv$default$db_meta$organizm
+        to_return$db_meta$publication<-temp_rv$default$db_meta$pub
+        to_return$db_meta$etc<-temp_rv$default$db_meta$annotation_database
+
+        to_return$trigger <- to_return$trigger + 1
+
+
+
+        shaddow_defs$exp_fact <- input$SI_exp_fact
+        shaddow_defs$exp_annot <- input$SI_exp_annot
+        shaddow_defs$omic_feat <- input$SI_omic_feat
+        shaddow_defs$feat_annot <- input$SI_feat_annot
+        shaddow_defs$feat_deets  <- input$SI_feat_deets
+        shaddow_defs$feature_filter  <- if (input$CB_fano_fact) "fano factor" else input$SI_feature_filter
+
+
+        to_return$shaddow_defs <- shaddow_defs
+        to_return$fano_factor <- temp_rv$fano_factor
+
+
+        # will this work?  or is the "observing" affecting a reactive with this render?
+        output$ui_data_meta <- renderUI({
+          out_text <- HTML(paste("from the <i>", temp_rv$default$db_meta$lab),"</i> lab")
+          ret_tags <-  tagList(
+            h4(to_return$db_meta$omics_type),
+            #"some more text",
+            out_text,
+            br()
+          )
+          return( ret_tags )
+        })
+
+      })
+
+
+
+      return(to_return)
+
+
+
     })
 
-
-
-    return(to_return)
-
-
-
-  }
-
-)}
+  })
+}
 
 ## To be copied in the UI
 # mod_ingestor_ui("ingestor_ui_1")
