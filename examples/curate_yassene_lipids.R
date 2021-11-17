@@ -18,10 +18,8 @@ if (DEV_OMICSER){
   OMICSER_RUN_DIR <- file.path(REPO_PATH)
   golem::document_and_reload(pkg = REPO_PATH)
 } else {
-
   require(omicser)
   OMICSER_RUN_DIR <- file.path(REPO_PATH)
-
 }
 
 # BOOTSTRAP the options we have already set up...
@@ -32,7 +30,7 @@ omicser_options <- omicser::get_config(in_path = OMICSER_RUN_DIR)
 CONDA_ENV <- omicser_options$conda_environment
 DB_ROOT_PATH <- omicser_options$db_root_path
 
-DB_NAME <-  list("Yassene Lipid concentrations & compositions" ="yassene_lipid")
+DB_NAME <-  list("Yassene Lipid concentrations & compositions" = "yassene_lipid")
 
 if (! (DB_NAME %in% omicser_options$database_names)){
   omicser_options$database_names <- c(omicser_options$database_names,DB_NAME)
@@ -132,7 +130,6 @@ prep_lipidizer_files <- function(data_file, path_root){
 
 RAW_DIR <- file.path(OMICSER_RUN_DIR, "examples", "raw_data", "yassene_data")
 
-
 # a. load concentration data --------------------
 
 conc_csv_name <- "example_species_conc.csv"
@@ -141,7 +138,6 @@ conc_dat_list <- prep_lipidizer_files(conc_csv_name, RAW_DIR)
 #
 comp_csv_name <- "example_composition.csv"
 comp_dat_list <- prep_lipidizer_files(comp_csv_name, RAW_DIR)
-
 
 #==== 4. pack into anndata =========================================================================
 
@@ -169,7 +165,6 @@ raw$X <- conc_dat_list$raw
 ad$raw <- raw
 ad$layers <- list(composition = comp$X,
                   raw_comp = comp_dat_list$raw)
-
 
 ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"core_data.h5ad"))
 
@@ -217,7 +212,6 @@ ad$var$var_rank <- order(ad$var$var)
 target_omics <- ad$var_names[which(ad$var$var_rank <= 40)]
 
 # ad$var$decile <- dplyr::ntile(ad$var$var, 10)
-
 
 # save an intermediate file (incase we want to revert...)
 ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"normalized_data.h5ad"))
