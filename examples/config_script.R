@@ -18,7 +18,7 @@ if (DEV_OMICSER){
 
 }
 
-db_root_path <- "test_db"
+db_root_path <- "/home/ricoderks/Documents/LUMC/Projects/omicser/examples/test_db"
 
 database_names <- list(
   "Domenico DIA" = "domenico_stem_cell"

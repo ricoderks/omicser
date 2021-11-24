@@ -1,4 +1,4 @@
 database_names:
     Domenico DIA: domenico_stem_cell
-db_root_path: test_db
+db_root_path: /home/ricoderks/Documents/LUMC/Projects/omicser/examples/test_db
 conda_environment: .pyenv
