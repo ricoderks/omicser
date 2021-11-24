@@ -1,4 +1,4 @@
 database_names:
-    dmnico dia: domenico_stem_cell
-db_root_path: /Volumes/MAC OS/Users/ahenrie/omicser_databases
-install: configured
+    Domenico DIA: domenico_stem_cell
+db_root_path: test_db
+conda_environment: .pyenv
