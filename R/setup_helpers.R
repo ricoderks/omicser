@@ -11,12 +11,13 @@
 write_config <- function(in_config, in_path=NULL, set_default=FALSE) {
 
   if ( is.null(in_path) ) {
-    if (golem::app_dev()) {
-      in_path <- golem::get_golem_wd()
-    } else {
+    # if (golem::app_dev()) {
+    #   in_path <- golem::get_golem_wd()
+    # } else {
       in_path <- getwd()
-    }
+    # }
   }
+
   #TODO: check_config_list(in_options)
   CONFIG_FILE <- file.path(in_path,'app_config.yml')
   write.config(config.dat = in_config, file.path = CONFIG_FILE,
@@ -48,13 +49,13 @@ write_config <- function(in_config, in_path=NULL, set_default=FALSE) {
 get_config <- function(in_path = NULL) {
 
   if ( is.null(in_path) ) {
-    if (golem::app_dev()) {
-      in_path <- golem::get_golem_wd()
-      install_type <- "dev"
-    } else {
+    # if (golem::app_dev()) {
+    #   in_path <- golem::get_golem_wd()
+    #   install_type <- "dev"
+    # } else {
       in_path <- getwd()
       install_type <- "configured"
-    }
+    # }
   }
 
   CONFIG_FILE <- file.path(in_path,'app_config.yml')
@@ -63,9 +64,19 @@ get_config <- function(in_path = NULL) {
     install_type <- "configured"
   } else {
     #fallback to default.
-    CONFIG_FILE <- system.file('app_config.yml', package = 'omicser')
-    config_list <- read.config( file = CONFIG_FILE )
-    install_type <- "default"
+    CONFIG_FILE <- system.file('inst/app/app_config.yml', package = 'omicser')
+    message(paste("fallback to default:",CONFIG_FILE))
+    if (CONFIG_FILE == "") {
+      message("can't find config file: hacking defaults")
+      config_list <- list(
+        database_names=list(UNDEFINED="UNDEFINED"),
+        db_root_path = "UNDEFINED",
+        install = "hack"
+        )
+    } else {
+      config_list <- read.config( file = CONFIG_FILE )
+      install_type <- "default"
+    }
   }
   config_list$install <- install_type
   #TODO: check_config_list(in_options)

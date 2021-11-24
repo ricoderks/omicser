@@ -18,3 +18,4 @@ examples/raw_data
 .pyenv/
 OMXRenv*
 quickstart
+pyenv_omicser
