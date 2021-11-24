@@ -262,8 +262,8 @@ saveRDS(diff_exp, file = file.path(DB_ROOT_PATH,DB_NAME, "db_de_table.rds"))
 
 #==== 7. create configs =========================================================================
 # what ad$obs do we want to make default values for...
-omic_type <- "prote" #c("transcript","prote","metabol","lipid","other")
-aggregate_by_default <- (if (omic_type=="transcript") TRUE else FALSE ) #e.g.  single cell
+omic_type <- "lipid" #c("transcript","prote","metabol","lipid","other")
+aggregate_by_default <- ifelse(omic_type == "transcript", TRUE, FALSE) #e.g.  single cell
 
 config_list <- list(
   ### grouping factors
@@ -295,7 +295,8 @@ config_list <- list(
   ### set the feature details when dot clicked in volcano plot
   # looks like this is not working, in domenico script it works
   feature_deets = c("feature_name",
-                    "lipid_class"),
+                    "lipid_class",
+                    "var_rank"),
 
   ### differential expression
   diffs = list(diff_exp_comps = levels(factor(diff_exp$versus)),
