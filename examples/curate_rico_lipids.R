@@ -8,60 +8,32 @@
 
 #==== 0. preamble/setup ==================================================
 
-DEV_OMICSER <- TRUE
-REPO_PATH <- getwd()
+#  Step 1: Set paths--------------
+#  path where the omicser repo is cloned to (see install_scrip.R)
+REPO_PATH <- getwd() # e.g. "~/Projects/NDCN_dev/omicser"
+OMICSER_RUN_DIR <- REPO_PATH # file.path(REPO_PATH,"quickstart")
 
-if (DEV_OMICSER){
+# where are the raw data files for this script?
+RAW_DATA_DIR <- file.path(OMICSER_RUN_DIR, "examples/raw_data/rico_data")
+# set where we will put the database folder
+DB_ROOT_PATH <- file.path(OMICSER_RUN_DIR,"examples/test_db")
+
+# what will we call the database
+DB_NAME <-  list("Rico lipids" = "rico_lipids")
+
+
+# name your python envirnoment
+OMICSER_PYTHON <- ".pyenv"# "pyenv_omicser"
+
+
+# Step 2:  Load the omicser package
+if (CLONED_OMICSER <- TRUE){
   # this should be a full path... e.g. ~/Projects/NDCN_dev/omicser
   # but for github, we will set relative to the repo BASE
-  REPO_PATH <- getwd()
-  OMICSER_RUN_DIR <- file.path(REPO_PATH)
   golem::document_and_reload(pkg = REPO_PATH)
 } else {
-
   require(omicser)
-  OMICSER_RUN_DIR <- file.path(REPO_PATH)
-
 }
-
-# BOOTSTRAP the options we have already set up...
-# NOTE: we are looking in the "quickstart" folder.  the default is to look for the config in with default getwd()
-omicser_options <- omicser::get_config(in_path = OMICSER_RUN_DIR)
-
-
-CONDA_ENV <- omicser_options$conda_environment
-DB_ROOT_PATH <- omicser_options$db_root_path
-
-DB_NAME <-  list("lipid conc." = "rico_lipid")
-
-if (! (DB_NAME %in% omicser_options$database_names)){
-  omicser_options$database_names <- c(omicser_options$database_names, DB_NAME)
-  omicser::write_config(in_options = omicser_options,
-                        in_path = OMICSER_RUN_DIR )
-}
-
-DB_DIR = file.path(DB_ROOT_PATH, DB_NAME)
-if (!dir.exists(DB_DIR)) {
-  dir.create(DB_DIR)
-}
-
-
-#==== 1. documentation / provenance ==============================================================
-# TODO:  markdown file or html with some copy about the database
-#  - lab, paper link/name
-#  summarize results / data origin whatever
-db_meta <- list(
-  organism = "mmusculus",
-  lab = "Giera",
-  annotation_database =  "TBD",
-  title = "test lipidizer lipidomics",
-  omic_type = "Lipidomics",
-  measurment = "concentration",
-  pub = "TBD",
-  date = format(Sys.time(), "%a %b %d %X %Y")
-)
-
-write_db_meta(db_meta,DB_NAME, db_root = DB_ROOT_PATH)
 
 
 #==== 2. helper functions =================================================================================
@@ -98,8 +70,8 @@ prep_lipidizer_files <- function(data_file, path_root){
   var_annot <- as.data.frame(lipids)
   rownames(var_annot) <- var_annot$lipids
   # and add the lipid class
-  # var_annot$lipid_class <- stringr::str_extract(string = var_annot$lipids,
-  #                                               pattern = "^[a-zA-Z]*")
+  var_annot$lipid_class <- stringr::str_extract(string = var_annot$lipids,
+                                                pattern = "^[a-zA-Z]*")
 
   ####  marginals on un-scaled data with zeroed NA
   # calculate the mean and variance for the variables
@@ -153,7 +125,7 @@ conc_dat_list <- prep_lipidizer_files(data_file = conc_csv_name,
 # helper_function<-("data-raw/ingest_helpers.R")
 # source(helper_function)
 
-DB_NAME <- "rico_lipid"
+DB_NAME <- "rico_lipids"
 
 # concentrations
 conc <- omicser::setup_database(database_name = DB_NAME,
@@ -185,6 +157,7 @@ ad$write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "core_data.h5ad"))
 
 #==== 5. post processing =========================================================================               --
 # use scanpy to do some scaling and calculations...
+# needed for creating differential tables
 sc <- reticulate::import("scanpy")
 
 
@@ -228,7 +201,7 @@ target_omics <- ad$var_names[which(ad$var$var_rank <= 40)]
 
 
 # save an intermediate file (incase we want to revert...)
-ad$write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "normalized_data.h5ad"))
+# ad$write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "normalized_data.h5ad"))
 
 #==== 5-a. dimension reduction - PCA / umap =========================================================================
 
@@ -283,41 +256,53 @@ diff_exp <- diff_exp %>%
          !is.nan(logfoldchanges))
 
 
-ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME, "norm_data_with_de.h5ad"))
+# ad$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME, "norm_data_with_de.h5ad"))
+
 saveRDS(diff_exp, file = file.path(DB_ROOT_PATH,DB_NAME, "db_de_table.rds"))
 
 #==== 7. create configs =========================================================================
 # what ad$obs do we want to make default values for...
 
 config_list <- list(
-  x_obs = c("Group"),
-  y_obs = c("var", "mean"), #MEASURES
-  obs_groupby = c("Group"),
-  obs_subset = c("Group"),
-  x_var = c("excess_zero_conc"), #c("excess_zero_conc", "sig_lasso_coef"),
-  y_var = c("mean", "var"),
-  var_groupby = c("highly_variable"),
-  var_subset = c("highly_variable"),  # NOTE:  <omic selector> is NOT in the data object so its not actually going to load
+  # grouping factors
+  group_vars = c("lipid_class"),
+  group_obs = c("Group"),
 
-  layers = c("X"),
+  # layer info
+  layer_values = c("X"),
+  layer_names = c("Conc."),
 
+  # ANNOTATIONS / TARGETS
+  # what adata$obs do we want to make default values for...
+  # # should just pack according to UI?
+  # observations
+  default_obs = c("sample_ID", "Group"),
+  obs_annots = c("sample_ID", "Group"),
+
+  # variables
+  default_var = c("feature_name"),
+  var_annots = c("feature_name", "lipid_class", "excess_zero_conc"),
+
+  target_featurs = target_omics,
+
+  # differential expression
   diffs = list(diff_exp_comps = levels(factor(diff_exp$versus)),
                diff_exp_comp_type = levels(factor(diff_exp$comp_type)), #i don"t think we need this
                diff_exp_obs_name = levels(factor(diff_exp$obs_name)),
                diff_exp_tests = levels(factor(diff_exp$test_type))
   ),
 
+  # meta info
+  annotation_database =  NA,
+  publication = "TBD",
+  method = "bulk", # c("single-cell","bulk","other")
+  omic_type = "lipid", #c("transcript","prote","metabol","lipid","other")
+  aggregate_by_default = FALSE, #e.g.  single cell
 
-  # Dimred
-  # dimreds = list(obsm = c("X_pca", "X_umap", "comp_X_pca", "comp_X_umap"),
-  #                varm = c("PCs", "comp_PCs")),
-
-  # what ad$obs do we want to make default values for...
-  # # should just pack according to UI?
-  default_factors = c("Group"),
-  target_omics = target_omics,
-  omic_details = c("omics_name", "mean", "var", "excess_zero_conc") #c("omics_name", "mean", "var", "excess_zero_conc", "sig_lasso_coef", "var_rank")
-
+  organism = 'mmusculus',
+  lab = "Giera",
+  title = "Lipidomics",
+  date = format(Sys.time(), "%a %b %d %X %Y")
 )
 
 omicser::write_db_conf(config_list = config_list,
@@ -325,5 +310,21 @@ omicser::write_db_conf(config_list = config_list,
                        db_root = DB_ROOT_PATH)
 
 #==== 8. write data file to load  =========================================================================
-ad$write_hh55ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "db_data.h5ad"))
+# get rid of categorical variable
+ad$var$lipid_class <- as.character(ad$var$lipid_class)
 
+ad$write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "db_data.h5ad"))
+
+
+
+# BOOTSTRAP the options we have already set up...
+# NOTE: we are looking in the "quickstart" folder.  the default is to look for the config in with default getwd()
+omicser_options <- omicser::get_config(in_path = OMICSER_RUN_DIR)
+DB_ROOT_PATH <- omicser_options$db_root_path
+
+#DB_NAME <- omicser_options$database_names[1]
+
+if (! (DB_NAME %in% omicser_options$database_names)){
+  omicser_options$database_names <- c(omicser_options$database_names,DB_NAME)
+  omicser::write_config(omicser_options,in_path = OMICSER_RUN_DIR )
+}
