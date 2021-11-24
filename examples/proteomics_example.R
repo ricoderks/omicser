@@ -11,16 +11,16 @@ REPO_PATH <- getwd() # e.g. "~/Projects/NDCN_dev/omicser"
 OMICSER_RUN_DIR <- REPO_PATH # file.path(REPO_PATH,"quickstart")
 
 # where are the raw data files for this script?
-RAW_DATA_DIR <- file.path(OMICSER_RUN_DIR,"quickstart/raw_data/DOMENICO_A")
+RAW_DATA_DIR <- file.path(OMICSER_RUN_DIR, "examples/raw_data/DOMENICO_A")
 # set where we will put the database folder
-DB_ROOT_PATH <- file.path(OMICSER_RUN_DIR,"quickstart/test_db")
+DB_ROOT_PATH <- file.path(OMICSER_RUN_DIR,"examples/test_db")
 
 # what will we call the database
 DB_NAME <-  list("Domenico DIA" = "domenico_stem_cell")
 
 
 # name your python envirnoment
-OMICSER_PYTHON <-  "pyenv_omicser"
+OMICSER_PYTHON <- ".pyenv"# "pyenv_omicser"
 
 
 # Step 2:  Load the omicser package
@@ -35,56 +35,56 @@ if (CLONED_OMICSER <- TRUE){
 # Step 3: Assert python back-end ----------------
 #  for the curation we need to have scanpy
 
-packages <- c("anndata")
-
-USE_CONDA <- TRUE  #change this if you prefer virtual environments
-if (USE_CONDA){
-    # TODO: wrap this in a try
-    reticulate::install_miniconda() #in case it is not already installed
-    reticulate::conda_create(OMICSER_PYTHON, python_version = 3.8)
-
-    reticulate::conda_install(envname=OMICSER_PYTHON,
-                            channel = "conda-forge",
-                            packages = packages )
-
-    reticulate::use_condaenv(condaenv = OMICSER_PYTHON,
-                                    conda = reticulate::conda_binary(),
-                                    required = TRUE)
-
-    # check that we have our python on deck
-    reticulate::py_discover_config()
-
-    if (!reticulate::py_module_available(module = "scanpy") ){
-      reticulate::conda_install(envname=OMICSER_PYTHON,
-                                             packages = "scanpy[leiden]",
-                                             forge=TRUE,
-                                             conda=reticulate::conda_binary())
-    }
-
-} else {
-    PYTHON_PATH <-"path/to/python" # EDIT THIS WITH YOUR PYTHON3.8
-    # so we'll do everything in conda instead with conda...  possibly doing it in stages makes it faster or less prone to failure... scapyy 1.7.2
-    cmd <- c("which python3")
-    PYTHON_PATH <- base::system( command = paste(cmd, collapse = " && "))
-
-    if (!reticulate::virtualenv_exists( OMICSER_PYTHON )){
-        reticulate::virtualenv_create( envname = OMICSER_PYTHON,
-                                    python = PYTHON_PATH,
-                                    packages =packages )
-    }
-    reticulate::use_virtualenv(virtualenv = OMICSER_PYTHON,
-                            required = TRUE)
-
-
-    # check that we have our python on deck
-    reticulate::py_discover_config()
-
-    if (!reticulate::py_module_available(module = "scanpy[leiden]") ){
-     reticulate::py_install(packages = "scanpy[leiden]")
-    }
-
-
-}
+# packages <- c("anndata")
+#
+# USE_CONDA <- TRUE  #change this if you prefer virtual environments
+# if (USE_CONDA){
+#     # TODO: wrap this in a try
+#     reticulate::install_miniconda() #in case it is not already installed
+#     reticulate::conda_create(OMICSER_PYTHON, python_version = 3.8)
+#
+#     reticulate::conda_install(envname=OMICSER_PYTHON,
+#                             channel = "conda-forge",
+#                             packages = packages )
+#
+#     reticulate::use_condaenv(condaenv = OMICSER_PYTHON,
+#                                     conda = reticulate::conda_binary(),
+#                                     required = TRUE)
+#
+#     # check that we have our python on deck
+#     reticulate::py_discover_config()
+#
+#     if (!reticulate::py_module_available(module = "scanpy") ){
+#       reticulate::conda_install(envname=OMICSER_PYTHON,
+#                                              packages = "scanpy[leiden]",
+#                                              forge=TRUE,
+#                                              conda=reticulate::conda_binary())
+#     }
+#
+# } else {
+#     PYTHON_PATH <-"path/to/python" # EDIT THIS WITH YOUR PYTHON3.8
+#     # so we'll do everything in conda instead with conda...  possibly doing it in stages makes it faster or less prone to failure... scapyy 1.7.2
+#     cmd <- c("which python3")
+#     PYTHON_PATH <- base::system( command = paste(cmd, collapse = " && "))
+#
+#     if (!reticulate::virtualenv_exists( OMICSER_PYTHON )){
+#         reticulate::virtualenv_create( envname = OMICSER_PYTHON,
+#                                     python = PYTHON_PATH,
+#                                     packages =packages )
+#     }
+#     reticulate::use_virtualenv(virtualenv = OMICSER_PYTHON,
+#                             required = TRUE)
+#
+#
+#     # check that we have our python on deck
+#     reticulate::py_discover_config()
+#
+#     if (!reticulate::py_module_available(module = "scanpy[leiden]") ){
+#      reticulate::py_install(packages = "scanpy[leiden]")
+#     }
+#
+#
+# }
 
 # Step 4:  get the data ---------------
 # we already have the data so we just need to locat it
