@@ -78,6 +78,9 @@ prep_lipidizer_files <- function(data_file, path_root){
   var_annot$mean <- colMeans(raw, na.rm = TRUE)
   var_annot$var <- matrixStats::colVars(raw, na.rm = TRUE)
 
+  # determine which lipids have mean zero, so they can be remove later
+  zero_var <- which(is.nan(var_annot$mean))
+
   # calculate the mean and variance for the observations, but this is for all samples together!! WHY?
   obs_meta$var <- matrixStats::rowVars(raw, na.rm = TRUE)
   obs_meta$mean <-rowMeans(raw, na.rm = TRUE)
@@ -88,10 +91,10 @@ prep_lipidizer_files <- function(data_file, path_root){
   var_annot$excess_zero_conc <- excess_zero_conc
 
   # make the output
-  data_list <- list(data_mat = dat_mat,
+  data_list <- list(data_mat = dat_mat[, -zero_var],
                     obs_meta = obs_meta,
-                    var_annot = var_annot,
-                    omics = rownames(var_annot),
+                    var_annot = var_annot[-zero_var, ],
+                    omics = rownames(var_annot)[-zero_var],
                     sample_ID = rownames(obs_meta),
                     etc = NULL,
                     raw = raw)
@@ -342,3 +345,7 @@ if (! (DB_NAME %in% omicser_options$database_names)){
   omicser_options$database_names <- c(omicser_options$database_names,DB_NAME)
   omicser::write_config(omicser_options,in_path = OMICSER_RUN_DIR )
 }
+
+
+
+
