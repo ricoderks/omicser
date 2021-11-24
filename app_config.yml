@@ -1,5 +1,6 @@
 database_names:
-    rico: rico_lipids
+    Domenico: domenico_stem_cell
+    Rico: rico_lipids
 db_root_path: //home/ricoderks/Documents/LUMC/Projects/omicser/examples/test_db
 conda_environment: .pyenv
 install: configured
