@@ -264,56 +264,65 @@ saveRDS(diff_exp, file = file.path(DB_ROOT_PATH,DB_NAME, "db_de_table.rds"))
 # what ad$obs do we want to make default values for...
 
 config_list <- list(
-  # grouping factors
+  ### grouping factors
   group_vars = c("lipid_class"),
   group_obs = c("Group"),
 
-  # layer info
+  ### layer info
   layer_values = c("X"),
+  # are the names of the layers used?
   layer_names = c("Conc."),
 
   # ANNOTATIONS / TARGETS
   # what adata$obs do we want to make default values for...
   # # should just pack according to UI?
-  # observations
-  default_obs = c("sample_ID", "Group"),
+
+  ### observations
+  default_obs = c("sample_ID"),
+  # heatmap default selected
   obs_annots = c("sample_ID", "Group"),
 
-  # variables
+  ### variables
   default_var = c("feature_name"),
-  var_annots = c("feature_name", "lipid_class", "excess_zero_conc"),
+  # heatmap default selected
+  var_annots = c("lipid_class", "excess_zero_conc"),
 
+  ### set the target features, looks like they are not loaded yet
   target_featurs = target_omics,
 
-  # differential expression
+  ### set the feature details when dot clicked in volcano plot
+  feature_deets = c("feature_name",
+                    "lipid_class"),
+
+  ### differential expression
   diffs = list(diff_exp_comps = levels(factor(diff_exp$versus)),
                diff_exp_comp_type = levels(factor(diff_exp$comp_type)), #i don"t think we need this
                diff_exp_obs_name = levels(factor(diff_exp$obs_name)),
-               diff_exp_tests = levels(factor(diff_exp$test_type))
-  ),
+               diff_exp_tests = levels(factor(diff_exp$test_type))),
 
-  # meta info
+  ### meta info
   annotation_database =  NA,
   publication = "TBD",
   method = "bulk", # c("single-cell","bulk","other")
   omic_type = "lipid", #c("transcript","prote","metabol","lipid","other")
   aggregate_by_default = FALSE, #e.g.  single cell
-
   organism = 'mmusculus',
   lab = "Giera",
   title = "Lipidomics",
   date = format(Sys.time(), "%a %b %d %X %Y")
-)
+) # end config list
 
+# write configuration to yaml file
 omicser::write_db_conf(config_list = config_list,
                        db_name = DB_NAME,
                        db_root = DB_ROOT_PATH)
 
 #==== 8. write data file to load  =========================================================================
-# get rid of categorical variable
+# get rid of categorical variable -> does not matter, converted to categorical in write method
 ad$var$lipid_class <- as.character(ad$var$lipid_class)
 
-ad$write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "db_data.h5ad"))
+# write the database
+ad $write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "db_data.h5ad"))
 
 
 
