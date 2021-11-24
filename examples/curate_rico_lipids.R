@@ -267,7 +267,8 @@ aggregate_by_default <- ifelse(omic_type == "transcript", TRUE, FALSE) #e.g.  si
 
 config_list <- list(
   ### grouping factors
-  group_vars = c("lipid_class"),
+  # if it needs to be in subset add here as well
+  group_vars = c("lipid_class", "excess_zero_conc"),
   group_obs = c("Group"),
 
   ### layer info
@@ -282,7 +283,7 @@ config_list <- list(
   ### observations
   default_obs = c("sample_ID"),
   # heatmap default selected
-  obs_annots = c("sample_ID", "Group"),
+  obs_annots = c("Group"),
 
   ### variables
   default_var = c("feature_name"),
@@ -290,7 +291,7 @@ config_list <- list(
   var_annots = c("lipid_class", "excess_zero_conc"),
 
   ### set the target features, looks like they are not loaded yet
-  target_featurs = target_omics,
+  target_features = target_omics,
 
   ### set the feature details when dot clicked in volcano plot
   # looks like this is not working, in domenico script it works
