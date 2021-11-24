@@ -262,6 +262,8 @@ saveRDS(diff_exp, file = file.path(DB_ROOT_PATH,DB_NAME, "db_de_table.rds"))
 
 #==== 7. create configs =========================================================================
 # what ad$obs do we want to make default values for...
+omic_type <- "prote" #c("transcript","prote","metabol","lipid","other")
+aggregate_by_default <- (if (omic_type=="transcript") TRUE else FALSE ) #e.g.  single cell
 
 config_list <- list(
   ### grouping factors
@@ -291,6 +293,7 @@ config_list <- list(
   target_featurs = target_omics,
 
   ### set the feature details when dot clicked in volcano plot
+  # looks like this is not working, in domenico script it works
   feature_deets = c("feature_name",
                     "lipid_class"),
 
@@ -304,8 +307,8 @@ config_list <- list(
   annotation_database =  NA,
   publication = "TBD",
   method = "bulk", # c("single-cell","bulk","other")
-  omic_type = "lipid", #c("transcript","prote","metabol","lipid","other")
-  aggregate_by_default = FALSE, #e.g.  single cell
+  omic_type = omic_type, # see above
+  aggregate_by_default = aggregate_by_default, # see above
   organism = 'mmusculus',
   lab = "Giera",
   title = "Lipidomics",
