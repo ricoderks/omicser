@@ -14,7 +14,7 @@ To make sure the correct python environment is used, a `.Renviron` file was crea
 
 ## App configuration
 
-The `omicser` app needs a config file (`app_config.yml`) to run. For now a config file is already prepared and copied into the container and copied to the correct location.
+The `omicser` app needs a config file (`app_config.yml`) to run. For now a config file is already prepared and copied into the container and copied to the correct location. In the `app_config.yml` you need the database names set correctly for your system. The other parameters you should not need to change!
 
 # Databases
 
