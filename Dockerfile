@@ -47,8 +47,14 @@ RUN mkdir /build_zone
 # add everything to the container
 ADD . /build_zone
 WORKDIR /build_zone
-# do the actual install
+# install omicser
 RUN R -e 'remotes::install_local(upgrade="never")'
+# install miniconda stuff etc.
+RUN R -e 'source("docker_stuff/install_py_env.R")'
+# copy the .Renviron file
+RUN cp ./docker_stuff/.Renviron /root/.Renviron
+# copy a app config file
+RUN cp ./docker_stuff/app_config.yml /root/app_config.yml
 # cleanup after myself
 RUN rm -rf /build_zone
 
