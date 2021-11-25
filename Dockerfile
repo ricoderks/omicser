@@ -58,6 +58,9 @@ RUN cp ./docker_stuff/app_config.yml /root/app_config.yml
 # cleanup after myself
 RUN rm -rf /build_zone
 
+# go back to the home directory
+WORKDIR /root
+
 # what port to expose
 EXPOSE 3939
 
