@@ -24,3 +24,7 @@ reticulate::use_condaenv(condaenv = OMICSER_PYTHON,
                          conda = reticulate::conda_binary(),
                          required = TRUE)
 
+
+
+### create .Renvion file with
+#RETICULATE_PYTHON="/root/.local/share/r-miniconda/envs/pyenv_omicser/bin/python"
