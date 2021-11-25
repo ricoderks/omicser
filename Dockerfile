@@ -40,6 +40,7 @@ RUN Rscript -e 'remotes::install_version("configr",upgrade="never", version = "0
 RUN Rscript -e 'remotes::install_version("broom",upgrade="never", version = "0.7.10")'
 RUN Rscript -e 'remotes::install_version("anndata",upgrade="never", version = "0.7.5.3")'
 RUN Rscript -e 'remotes::install_github("jokergoo/ComplexHeatmap@6c3ae544adfbf19566c70546c9235cfb9efe5481")'
+RUN Rscript -e 'remotes::install_version("shinyFiles",upgrade="never", version = "0.9.1")'
 
 ### install omicser package
 # make temporary work directory
