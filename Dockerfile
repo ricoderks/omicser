@@ -56,4 +56,4 @@ RUN rm -rf /build_zone
 EXPOSE 3939
 
 # fire the app on startup
-CMD R -e "options('shiny.port'=3939,shiny.host='0.0.0.0');omicser::run_app()"
+CMD R -e "options('shiny.port'=3939,shiny.host='0.0.0.0');omicser::run_docker()"
