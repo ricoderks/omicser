@@ -5,10 +5,15 @@
 #     *(Data Independent Acquisition) mass spectrometry, yielding estimates of concentrations for each protein feature
 ##
 
+#### Create an app to browse PBMC3k data from 10X Genomics
+require("reticulate")
+
+DB_NAME <-  list("Domenico DIA" = "domenico_stem_cell") # name our database
+
+
+#-#_#_#_#_#_#_#_#_#_#_#_#_#_#_#__#_#_#_#_#_#_
 #  Step 1: Set paths--------------
-#  path where the omicser repo is cloned to (see install_scrip.R)
-REPO_PATH <- getwd() # e.g. "~/Projects/NDCN_dev/omicser"
-OMICSER_RUN_DIR <- REPO_PATH # file.path(REPO_PATH,"quickstart")
+OMICSER_RUN_DIR <- getwd() # /path/to/cloned/omicser or just where you run from
 
 # where are the raw data files for this script?
 RAW_DATA_DIR <- file.path(OMICSER_RUN_DIR, "examples/raw_data/DOMENICO_A")
@@ -21,19 +26,32 @@ DB_NAME <-  list("Domenico DIA" = "domenico_stem_cell")
 
 # name your python envirnoment
 OMICSER_PYTHON <- ".pyenv"# "pyenv_omicser"
+# RAW_DATA_DIR <- file.path(OMICSER_RUN_DIR,"raw_data") # set the path for where the raw_data lives...
+#                                                       # here its going to be in our OMCISER_RUN_DIR
+# RAW_DATA_DIR <- file.path("/Users/ergonyc/Projects/NDCN_dev/testing/omxr","raw_data","DOMENICO_A")
+#
+#
+# if (!dir.exists(RAW_DATA_DIR)) {
+#   dir.create(RAW_DATA_DIR) #fails if the path has multiple levels to generate
+# }
+#
+# # set the path for where the databases live... here its going to be in our OMCISER_RUN_DIR
+# DB_ROOT_PATH <- file.path(OMICSER_RUN_DIR,"databases")
+# DB_ROOT_PATH <- "/Users/ergonyc/Projects/NDCN_dev/testing/omxr/databases"
+#
+# if (!dir.exists(DB_ROOT_PATH)) {
+#   dir.create(DB_ROOT_PATH)
+# }
+#
+# OMICSER_PYTHON <-  "pyenv_omicser"
+# installation type (see install_script.R)
 
 
-# Step 2:  Load the omicser package
-if (CLONED_OMICSER <- TRUE){
-  # this should be a full path... e.g. ~/Projects/NDCN_dev/omicser
-  # but for github, we will set relative to the repo BASE
-  golem::document_and_reload(pkg = REPO_PATH)
-} else {
-  require(omicser)
-}
 
-# Step 3: Assert python back-end ----------------
+# Step 2: Assert python back-end --------------------------------
 #  for the curation we need to have scanpy
+CONDA_INSTALLED <- reticulate:::miniconda_exists()
+OMICSER_PYTHON_EXISTS <- any(reticulate::conda_list()["name"]==OMICSER_PYTHON)
 
 # packages <- c("anndata")
 #
@@ -85,9 +103,37 @@ if (CLONED_OMICSER <- TRUE){
 #
 #
 # }
+if (!CONDA_INSTALLED){  #you should already have installed miniconda and created the env
+  reticulate::install_miniconda() #in case it is not already installed
+}
+
+
+if (!OMICSER_PYTHON_EXISTS){  #you should already have installed miniconda and created the env
+  # simpler pip pypi install
+  packages <- c("scanpy[leiden]")
+  reticulate::conda_create(OMICSER_PYTHON, python_version = 3.8)
+  reticulate::conda_install(envname=OMICSER_PYTHON,
+                            # channel = "conda-forge",
+                            pip = TRUE,
+                            packages =  packages )
+
+}
+
+if ( !Sys.getenv("RETICULATE_PYTHON")=="OMICSER_PYTHON" ) {
+  Sys.setenv("RETICULATE_PYTHON"=reticulate::conda_python(envname = OMICSER_PYTHON))
+}
+
+
+# check that we have our python on deck
+reticulate::py_discover_config()
+
 
 # Step 4:  get the data ---------------
-# we already have the data so we just need to locat it
+# create directory structure for data and databases
+DB_DIR = file.path(DB_ROOT_PATH,DB_NAME)
+if (!dir.exists(DB_DIR)) {
+  dir.create(DB_DIR)
+}
 
 # report table
 matrix_data_file <- "20210524_093609_170805_aging_against_SC_merged_all_lib_2_Report.xls"
@@ -240,22 +286,40 @@ prep_DIA_files <- function(matrix_data_file,annot_de_file,conditions_table_file,
   return(data_list)
 }
 
-# Step 6:  pack data into AnnData format --------------
-data_list <- prep_DIA_files(matrix_data_file,annot_de_file,conditions_table_file,RAW_DATA_DIR)
 
-adata <- omicser::setup_database(database_name=DB_NAME,
-                              db_path=DB_ROOT_PATH,
-                              data_in=data_list,
-                              db_meta=NULL ,
-                              re_pack=TRUE)
+# Step 6: load helper tools via the "omicser" browser package ---------
+CLONED_OMICSER <- TRUE
+if ( CLONED_OMICSER ) {
+  require("golem")
+  golem::document_and_reload(pkg = OMICSER_RUN_DIR)
+} else {
+  require("omicser")
+  #see install_script.R if not installed
+}
 
-
-if (FALSE)
-    adata$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"core_data.h5ad"))
 
 
 # Steps 7-9: CURATION
-# Step 7: additional data processing ----
+SAVE_INTERMEDIATE_FILES <- FALSE
+# Step 7:  pack data into AnnData format --------------
+# identify location of raw data
+
+data_list <- prep_DIA_files(matrix_data_file,annot_de_file,conditions_table_file,RAW_DATA_DIR)
+
+# create database formatted as AnnData
+adata <- omicser::setup_database(database_name = DB_NAME,
+                                 db_path = DB_ROOT_PATH,
+                                 data_in = data_list,
+                                 re_pack = TRUE)
+
+
+
+if (SAVE_INTERMEDIATE_FILES) {
+    adata$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"core_data.h5ad"))
+    }
+
+
+# Step 8: additional data processing ----
 
 # use scanpy to do some scaling and calculations...
 sc <- reticulate::import("scanpy")
@@ -311,7 +375,7 @@ adata$var$vmr_decile <- dplyr::ntile(adata$var$logvmr, 10)
 facts <- sapply(adata$var, is.factor)
 adata$var[facts] <- lapply(adata$var[facts], as.character)
 
-if (FALSE) {
+if (SAVE_INTERMEDIATE_FILES) {
     # save an intermediate file (incase we want to revert...)
     adata$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"normalized_data.h5ad"))
 }
@@ -337,7 +401,7 @@ adata$varm$unscaled_PCs <- zro_na$varm$PCs
 adata$obsp$unscaled_distances <- zro_na$obsp$distances
 adata$obsp$unscaled_connectivities <- zro_na$obsp$connectivities
 
-if (FALSE){
+if (SAVE_INTERMEDIATE_FILES){
     # save an intermediate file (incase we want to revert...)
     adata$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"norm_data_plus_dr.h5ad"))
 }
@@ -347,27 +411,16 @@ if (FALSE){
 diff_exp <- data_list$de
 saveRDS(diff_exp, file.path(DB_ROOT_PATH,DB_NAME, "db_de_table.rds"))
 
-#diff_exp <- readRDS(file = file.path(DB_ROOT_PATH,DB_NAME, "db_de_table.rds"))
 
-if (FALSE){
-    #load intermediat data
-    adata <- anndata::read_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"norm_data_plus_dr.h5ad"))
+# Step 9: Write data files to database directory -----------
+# write final database
+adata$write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "db_data.h5ad"))
+
+# set to TRUE and restart from here for re-configuring
+if (FALSE) {
+  adata <- anndata::read_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"db_data.h5ad"))
+  diff_exp <- readRDS( file = file.path(DB_ROOT_PATH,DB_NAME, "db_de_table.rds"))
 }
-# Step 9: Write data files to database directory ---------
-DB_DIR = file.path(DB_ROOT_PATH,DB_NAME)
-if (!dir.exists(DB_DIR)) {
-  dir.create(DB_DIR)
-}
-
-# save diff expression data
-diff_exp <- data_list$de
-
-saveRDS(diff_exp, file.path(DB_ROOT_PATH,DB_NAME, "db_de_table.rds"))
-
-# write the anndata object
-adata$write_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"db_data.h5ad"))
-
-#reload
 if (FALSE) adata <- anndata::read_h5ad(filename=file.path(DB_ROOT_PATH,DB_NAME,"db_data.h5ad"))
 
 
@@ -405,7 +458,7 @@ config_list <- list(
 
 
   target_features = target_features,
-  feature_deets = c("Genes",
+  feature_details = c("Genes",
                 "ProteinDescriptions",
                 "ProteinNames",
                 "GO.Cellular.Component",
@@ -459,22 +512,26 @@ omicser::write_db_conf(config_list,DB_NAME, db_root = DB_ROOT_PATH)
 # BOOTSTRAP the options we have already set up...
 # NOTE: we are looking in the "quickstart" folder.  the default is to look for the config in with default getwd()
 omicser_options <- omicser::get_config(in_path = OMICSER_RUN_DIR)
-DB_ROOT_PATH <- omicser_options$db_root_path
+omicser_options <- omicser::get_config()
+DB_ROOT_PATH_ <- omicser_options$db_root_path
+if (DB_ROOT_PATH_==DB_ROOT_PATH){
+  # add the database if we need it...
+  if (! (DB_NAME %in% omicser_options$database_names)){
+    omicser_options$database_names <- c(omicser_options$database_names,DB_NAME)
+  }
 
-#DB_NAME <- omicser_options$database_names[1]
-
-if (! (DB_NAME %in% omicser_options$database_names)){
-  omicser_options$database_names <- c(omicser_options$database_names,DB_NAME)
-  omicser::write_config(omicser_options,in_path = OMICSER_RUN_DIR )
+} else {
+  omicser_options$db_root_path <- DB_ROOT_PATH
+  if (any(omicser_options$database_names == "UNDEFINED")) {
+    omicser_options$database_names <- DB_NAME
+  } else {
+    omicser_options$database_names <- c(omicser_options$database_names,DB_NAME)
+  }
 }
 
+
+# write the configuration file
+omicser::write_config(omicser_options,in_path = OMICSER_RUN_DIR )
+
+
 # Step 11: Run the browser -------------
-
-# assert the right conda (restart R-session?)
-reticulate::use_condaenv(condaenv = OMICSER_PYTHON,
-                         conda = reticulate::conda_binary(),
-                         required = TRUE)
-
-#### Launch browser
-omicser::run_defaults()
-#
