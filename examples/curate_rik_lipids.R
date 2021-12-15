@@ -80,6 +80,7 @@ prep_lipidizer_files <- function(data_file, path_root){
   meta_cols <- c("sample_id", "Date_of_harvest", "Cell_type", "Genotype", "Cell_line", "Drug_treatment", "Days_in_culture", "Cell_number_k", "Replicate", "Date_of_exp.")
   obs_meta <- raw_table[, ..meta_cols]
   obs_meta$Cell_number_k <- as.character(obs_meta$Cell_number_k)
+  obs_meta$Replicate <- as.character(obs_meta$Replicate)
   # obs_meta$Group <- exp_group
   rownames(obs_meta) <- raw_table$sample_id
 
@@ -273,7 +274,7 @@ target_omics <- ad$var_names[which(ad$var$var_rank <= 40)]
 
 
 #==== 6. differential expression  ======================================================================
-
+# differential expression for cell_number_k
 test_types <- c("wilcoxon",
                 "t-test_overestim_var")
 
@@ -282,11 +283,26 @@ comp_types <- c("{300}V{600}",
                 "{600}V{900}")
 obs_names <- c("Cell_number_k")
 
-diff_exp <- omicser::compute_de_table(adata = ad,
-                                      comp_types = comp_types,
-                                      test_types = test_types,
-                                      obs_names = obs_names,
-                                      sc = sc)
+diff_exp_cell <- omicser::compute_de_table(adata = ad,
+                                           comp_types = comp_types,
+                                           test_types = test_types,
+                                           obs_names = obs_names,
+                                           sc = sc)
+
+# differential expression for genotype
+test_types <- c("wilcoxon",
+                "t-test_overestim_var")
+
+comp_types <- c("{ApoE3/3}V{ApoE4/4}")
+obs_names <- c("Genotype")
+
+diff_exp_geno <- omicser::compute_de_table(adata = ad,
+                                           comp_types = comp_types,
+                                           test_types = test_types,
+                                           obs_names = obs_names,
+                                           sc = sc)
+
+diff_exp <- rbind(diff_exp_cell, diff_exp_geno)
 
 # remove infinite values and NaN"s
 library(tidyverse)
@@ -334,9 +350,9 @@ config_list <- list(
 
   ### set the feature details when dot clicked in volcano plot
   # looks like this is not working, in domenico script it works
-  feature_deets = c("feature_name",
-                    "lipid_class",
-                    "var_rank"),
+  feature_details = c("feature_name",
+                      "lipid_class",
+                      "var_rank"),
 
   ### differential expression
   diffs = list(diff_exp_comps = levels(factor(diff_exp$versus)),
