@@ -1,4 +1,5 @@
 database_names:
     Domenico: domenico_stem_cell
+    Rik lipids: rik_lipids
 db_root_path: //home/ricoderks/Documents/LUMC/Projects/omicser/examples/databases
 install: configured
