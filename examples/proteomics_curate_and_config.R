@@ -13,7 +13,7 @@ DB_NAME <-  list("Domenico DIA" = "domenico_stem_cell") # name our database
 
 #-#_#_#_#_#_#_#_#_#_#_#_#_#_#_#__#_#_#_#_#_#_
 #  Step 1: Set paths--------------
-OMICSER_RUN_DIR <- getwd() # /path/to/cloned/omicser or just where you run from
+OMICSER_RUN_DIR <- getwd() # /path/to/cloned/omicser/examples or just where you run from
 
 # where are the raw data files for this script?
 RAW_DATA_DIR <- file.path(OMICSER_RUN_DIR, "examples/raw_data/DOMENICO_A")
@@ -291,7 +291,8 @@ prep_DIA_files <- function(matrix_data_file,annot_de_file,conditions_table_file,
 CLONED_OMICSER <- TRUE
 if ( CLONED_OMICSER ) {
   require("golem")
-  golem::document_and_reload(pkg = OMICSER_RUN_DIR)
+  REPO_DIR -> getwd()
+  golem::document_and_reload(pkg = REPO_DIR)
 } else {
   require("omicser")
   #see install_script.R if not installed
