@@ -21,7 +21,8 @@ DB_ROOT_PATH <- OMICSER_RUN_DIR <- file.path(OMICSER_RUN_DIR,"databases") #/path
 # for example the databases curated with `pbmc3k_curate_and_config.R` & `proteomics_curate_and_config.R`
 database_names <- list(
   "Domenico DIA" = "domenico_stem_cell",
-  "mypbmc" = "pbmc3k",
+  # "mypbmc" = "pbmc3k"
+  "Rico lipids" = "rico_lipids"
 )
 
 

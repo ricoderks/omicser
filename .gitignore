@@ -15,7 +15,7 @@ inst/doc
 docs
 inst/DB
 examples/raw_data
-examples/test_db
+examples/databases
 .pyenv/
 OMXRenv*
 quickstart
