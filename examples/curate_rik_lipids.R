@@ -235,7 +235,25 @@ sc <- reticulate::import("scanpy")
 #sc$pp$highly_variable_genes(ad,n_top_genes=40)
 ad$var$var_rank <- order(ad$var$var)
 # choose top 40 proteins by variance across dataset as our "targets"
-target_omics <- ad$var_names[which(ad$var$var_rank <= 40)]
+#target_omics <- ad$var_names[which(ad$var$var_rank <= 40)]
+
+### use Yassene's trick to find interesting features
+# not looking that great yet
+library(glmnet)
+cvfit <- cv.glmnet(x = conc_dat_list$data_mat,
+                   y = conc_dat_list$obs_meta$Genotype,
+                   nlambda = 100,
+                   alpha = 0.8,
+                   family = "multinomial",
+                   type.multinomial = "grouped")
+
+coef <- coef(cvfit,
+             s = "lambda.min")
+
+tmp <- as.matrix(coef$`ApoE3/3`)
+tmp1 <- tmp[which(tmp != 0)]
+coef_names <- rownames(tmp)[which(tmp != 0)][-1]
+target_omics <- coef_names
 
 # ad$var$decile <- dplyr::ntile(ad$var$var, 10)
 
