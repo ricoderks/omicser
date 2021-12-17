@@ -15,37 +15,24 @@ DB_NAME <-  list("Domenico DIA" = "domenico_stem_cell") # name our database
 #  Step 1: Set paths--------------
 OMICSER_RUN_DIR <- getwd() # /path/to/cloned/omicser/examples or just where you run from
 
-# where are the raw data files for this script?
-RAW_DATA_DIR <- file.path(OMICSER_RUN_DIR, "examples/raw_data/DOMENICO_A")
-# set where we will put the database folder
-DB_ROOT_PATH <- file.path(OMICSER_RUN_DIR,"examples/test_db")
-
-# what will we call the database
-DB_NAME <-  list("Domenico DIA" = "domenico_stem_cell")
+RAW_DATA_DIR <- file.path(OMICSER_RUN_DIR, "raw_data", "DOMENICO_A") # set the path for where the raw_data lives...
+                                                      # here its going to be in our OMCISER_RUN_DIR
+              # file.path("/Users/ergonyc/Projects/NDCN_dev/testing/omxr","raw_data","DOMENICO_A")
 
 
-# name your python envirnoment
-OMICSER_PYTHON <- ".pyenv"# "pyenv_omicser"
-# RAW_DATA_DIR <- file.path(OMICSER_RUN_DIR,"raw_data") # set the path for where the raw_data lives...
-#                                                       # here its going to be in our OMCISER_RUN_DIR
-# RAW_DATA_DIR <- file.path("/Users/ergonyc/Projects/NDCN_dev/testing/omxr","raw_data","DOMENICO_A")
-#
-#
-# if (!dir.exists(RAW_DATA_DIR)) {
-#   dir.create(RAW_DATA_DIR) #fails if the path has multiple levels to generate
-# }
-#
-# # set the path for where the databases live... here its going to be in our OMCISER_RUN_DIR
-# DB_ROOT_PATH <- file.path(OMICSER_RUN_DIR,"databases")
-# DB_ROOT_PATH <- "/Users/ergonyc/Projects/NDCN_dev/testing/omxr/databases"
-#
-# if (!dir.exists(DB_ROOT_PATH)) {
-#   dir.create(DB_ROOT_PATH)
-# }
-#
-# OMICSER_PYTHON <-  "pyenv_omicser"
+if (!dir.exists(RAW_DATA_DIR)) {
+  dir.create(RAW_DATA_DIR) #fails if the path has multiple levels to generate
+}
+
+# set the path for where the databases live... here its going to be in our OMCISER_RUN_DIR
+DB_ROOT_PATH <- file.path(OMICSER_RUN_DIR,"databases") # "/Users/ergonyc/Projects/NDCN_dev/testing/omxr/databases"
+
+if (!dir.exists(DB_ROOT_PATH)) {
+  dir.create(DB_ROOT_PATH)
+}
+
+OMICSER_PYTHON <- ".pyenv" # "pyenv_omicser"
 # installation type (see install_script.R)
-
 
 
 # Step 2: Assert python back-end --------------------------------
@@ -110,16 +97,17 @@ if (!CONDA_INSTALLED){  #you should already have installed miniconda and created
 
 if (!OMICSER_PYTHON_EXISTS){  #you should already have installed miniconda and created the env
   # simpler pip pypi install
-  packages <- c("scanpy[leiden]")
+  packages <- c("scanpy", "leidenalg")
   reticulate::conda_create(OMICSER_PYTHON, python_version = 3.8)
   reticulate::conda_install(envname=OMICSER_PYTHON,
                             # channel = "conda-forge",
                             pip = TRUE,
                             packages =  packages )
 
+
 }
 
-if ( !Sys.getenv("RETICULATE_PYTHON")=="OMICSER_PYTHON" ) {
+if ( Sys.getenv("RETICULATE_PYTHON") != "OMICSER_PYTHON" ) {
   Sys.setenv("RETICULATE_PYTHON"=reticulate::conda_python(envname = OMICSER_PYTHON))
 }
 

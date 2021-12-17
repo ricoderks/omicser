@@ -1,5 +1,5 @@
 
-#
+# make sure you are in the directory where the repo is cloned. e.g. in `omicser/`
 
 REPO_DIR <- getwd()  #/path/to/cloned/repo
 golem::document_and_reload(pkg = REPO_DIR) #use golem to make sure the code is loaded as `omicser`
@@ -13,7 +13,6 @@ setwd(OMICSER_RUN_DIR)
 # 1. read from the app_config.yml found in the current working directory
 # run in system default browser (chrome recommended) with databases found in DB_ROOT_PATH
 omicser::run_defaults()
-
 
 
 
