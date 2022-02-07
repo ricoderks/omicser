@@ -101,10 +101,9 @@ mod_ingestor_ui <- function(id) {
                )
              )
       ),
-
       column(width = 8,
              offset = 0,
-             mod_additional_info_ui(id = ns("additional_info_ui_ingest"), title = "Databse Information")
+             mod_additional_info_ui(id = ns("additional_info_ui_ingest"), title = "Database Information")
       )
     )
 
