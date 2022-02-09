@@ -21,3 +21,4 @@ $run_dev.*
 ^\.github$
 ^Dockerfile\.2$
 docker_stuff/
+^codecov\.yml$

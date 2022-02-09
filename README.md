@@ -7,6 +7,8 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Codecov test
+coverage](https://codecov.io/gh/ricoderks/omicser/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ricoderks/omicser?branch=main)
 <!-- badges: end -->
 
 ## Introduction
@@ -21,7 +23,8 @@ well as a small collection of helper functions to aid in curating and
 configuring datasets for browsing.
 
 > *Note*: although the NDCN Omics Browser is not yet officially named,
-> references it as `omicser` or `omxr`.
+> references it as `omicser` or `omxr`. We are open to ideas around
+> naming the tool.
 
 There are two types of users for this package:
 

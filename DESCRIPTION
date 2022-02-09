@@ -33,6 +33,7 @@ RoxygenNote: 7.1.2
 URL: https://ndcn.github.io/omicser, https://github.com/ndcn/omicser
 BugReports: https://github.com/ndcn/omicser/issues
 Suggests: 
+    covr,
     knitr
 VignetteBuilder: knitr
 Remotes: 
