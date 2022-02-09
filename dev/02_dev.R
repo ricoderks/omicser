@@ -108,7 +108,7 @@ golem::add_module( name = "export" ) # Name of the module
 # TODO:  add tests ASAP
 ## Tests ----
 ## Add one line by test you want to create
-#usethis::use_test( "app" )
+usethis::use_test( "setup-helpers" )
 
 # Documentation
 ## Vignette ----
