@@ -1,0 +1,74 @@
+group_vars:
+- lipid_class
+- excess_zero_conc
+group_obs: Group
+layer_values: X
+layer_names: Conc.
+default_obs: sample_ID
+obs_annots: Group
+default_var: feature_name
+var_annots:
+- lipid_class
+- excess_zero_conc
+target_features:
+- DAG(16:0/18:0)
+- FFA(24:0)
+- PC(15:0/16:1)
+- PC(16:0/18:3)
+- PC(18:1/22:4)
+- PC(18:2/20:5)
+- PE(18:0/16:0)
+- PE(18:0/16:1)
+- PE(18:2/20:1)
+- PE(P-18:0/18:3)
+- TAG42:0-FA14:0
+- TAG42:1-FA18:1
+- TAG42:2-FA18:2
+- TAG44:1-FA12:0
+- TAG44:1-FA14:0
+- TAG50:0-FA14:0
+- TAG50:3-FA18:3
+- TAG50:4-FA16:1
+- TAG50:5-FA16:1
+- TAG51:2-FA17:0
+- TAG52:1-FA16:0
+- TAG52:3-FA18:0
+- TAG52:7-FA16:0
+- TAG54:2-FA16:0
+- TAG54:6-FA20:3
+- TAG56:3-FA18:1
+- TAG56:4-FA18:2
+- TAG56:4-FA20:1
+- TAG56:6-FA20:3
+- TAG56:7-FA16:0
+- TAG56:8-FA18:2
+- TAG56:9-FA18:3
+- TAG58:10-FA20:4
+- TAG58:3-FA18:1
+- TAG58:6-FA18:1
+- TAG58:6-FA20:4
+- TAG58:7-FA22:5
+- TAG58:8-FA18:2
+- TAG58:8-FA20:3
+- TAG58:8-FA20:4
+feature_deets:
+- feature_name
+- lipid_class
+- var_rank
+diffs:
+    diff_exp_comps:
+    - LEAN vs. OBESE
+    - LEAN vs. OBESE+VLCD
+    - OBESE vs. OBESE+VLCD
+    diff_exp_comp_type: grpVref
+    diff_exp_obs_name: Group
+    diff_exp_tests: wilcoxon
+annotation_database: .na
+publication: TBD
+method: bulk
+omic_type: lipid
+aggregate_by_default: no
+organism: mmusculus
+lab: Giera
+title: Lipidomics
+date: wo jan 19 09:26:02 2022
