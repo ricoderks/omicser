@@ -1,0 +1,40 @@
+---
+title: "Lipidocmis"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+## Database Information Document
+
+### This Information HAS NOT been curated
+
+CURATORS: Please _curate_ a detailed explanation of the database
+e.g. the information in `db_config.yml` could be configured here, such as:
+
+-   organism: human
+-   lab: Martin Giera
+-   annotation_database: uniprot_for_annotation.RData?
+-   title: awesome_data
+-   omic_type: <blanketyblank>omics
+-   measurment: normalized counts
+-   pub: TBD
+-   date: Tue Oct 14 12:50:45 2021
+-   url : [find me](http:google.com)
+
+
+
+### Possible papers / Citation
+
+### Possible materials and methods
+
+------------------------------------------------------------------------
+### Quality Control
+
+### _CONTACT INFO_ for Questions and Comments
+
+Please write to Sir Isaac Newton at the following email address:
+[sombody\@somewher.es](mailto:sombody@somewher.es){.email}
+
+© 2099 Biology is solved with wave equations, Inc.

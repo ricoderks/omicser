@@ -109,6 +109,7 @@ golem::add_module( name = "export" ) # Name of the module
 ## Tests ----
 ## Add one line by test you want to create
 usethis::use_test( "setup-helpers" )
+usethis::use_test( "fct_ingestor" )
 
 # Documentation
 ## Vignette ----
