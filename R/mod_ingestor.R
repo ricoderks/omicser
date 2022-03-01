@@ -550,6 +550,8 @@ mod_ingestor_server <- function(id) {
 
       to_return$db_meta$name<-db$name
       to_return$db_meta$db_dir<-db$dir
+      # also add the name of all databases
+      to_return$db_meta$db_list <- db$list
 
 
 

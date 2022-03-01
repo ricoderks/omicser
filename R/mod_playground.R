@@ -32,6 +32,12 @@ mod_playground_ui <- function(id){
         title = "Table", value='table',
         mod_pg_table_ui(id=ns("pg_pg_table_ui_1"))
 
+      ),
+      # tabpanel for linking 2 datatsets
+      tabPanel(
+        title = "Link datasets",
+        value = "linking",
+        mod_linking_ui((id = ns("linking_ui_1")))
       )
       #,
       # # QC tab DEPRICATED FOR NOW
@@ -58,6 +64,9 @@ mod_playground_server <- function(id ,rv_data, rv_selections) {
 
     mod_pg_expression_server("pg_expression_ui_1",rv_data, rv_selections, heat_data)
     mod_pg_diff_expr_server("pg_diff_expr_1",rv_data, rv_selections, active_layer_data)
+
+    # module for linking
+    mod_linking_server("linking_ui_1", rv_data, rv_selections)
 
     #mod_pg_vis_qc_server("pg_vis_qc_ui_1",rv_data, rv_selections)
 
