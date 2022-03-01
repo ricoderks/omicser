@@ -30,7 +30,8 @@ mod_linking_ui <- function(id){
         actionButton(inputId = ns("AB_load_B"),
                      label = "Load Data",
                      class = "btn btn-large btn-danger")
-      )
+      ),
+      uiOutput(outputId = ns("UI_layer_B"))
       # verbatimTextOutput(outputId = ns("temp"))
     )
   )
@@ -47,7 +48,7 @@ mod_linking_server <- function(id, rv_data, rv_selections){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    ###### reactive values
+    ######### reactive values #########
     # database info
     db <- reactiveValues(name_a = NULL, # current, dataset A
                          name_b = NULL, # dataset B
@@ -57,15 +58,19 @@ mod_linking_server <- function(id, rv_data, rv_selections){
                          list = NULL, # all databases
                          regenerate = TRUE) # always regenerate on initial load...
 
-    ##### outputs
+    db_loaded <- reactiveVal(FALSE)
+    ######################################################
 
+
+    ####### outputs #########
+    # just for some temporary stuff
     output$temp <- renderText({
       req(rv_data)
 
-      # What omic type is loaded
       rv_data$db_meta$name
     })
 
+    # show which database is loaded for data set A
     output$UI_dataset_a <- renderUI({
       req(rv_data$db_meta$name)
 
@@ -81,23 +86,50 @@ mod_linking_server <- function(id, rv_data, rv_selections){
       return(out_text)
     })
 
+    # show which database is loaded for data set B
     output$UI_dataset_b <- renderUI({
-      req(db$name_b)
+      req(db_loaded,
+          db$name_b)
 
       # Show which database is loaded and from which omic type.
-      if (is.null(db$name_b) ) {
+      if (is.null(db$name_b)) {
         out_text <- "No data loaded"
       } else {
-        out_text <- paste("<i>", #rv_data$db_meta$omics_type,
+        out_text <- paste("<i>", # rv_data$db_meta$omics_type,
                           "</i> database:  <b>", db$name_b,
                           "</b>")
       }
-      out_text <- HTML("<b>Dataset B :</b> ", out_text)
+
+      # check if a database is really loaded
+      if (db_loaded() == TRUE) {
+        out_text <- HTML("<b>Dataset B :</b> ", out_text)
+      } else {
+        out_text <- HTML("<b>Dataset B :</b> ")
+      }
       return(out_text)
     })
 
+    # create UI element to select a data layer for data set B
+    output$UI_layer_B <- renderUI({
+      req(rv_data$config_b)
 
-    ##### observers
+      # get the layers of data set B
+      layers_b <- rv_data$config_b$conf[field=="layer"]$UI
+
+      # first check if a database is really loaded
+      if (db_loaded() == TRUE) {
+        tagList(
+          selectInput(inputId = ns("SI_layer_b"),
+                      label = "Select layer for data set B:",
+                      choices = layers_b,
+                      multiple = FALSE)
+        )
+      }
+    })
+    #################################################
+
+
+    ######## observers ########
     # update all database info
     observe({
       req(rv_data$db_meta)
@@ -106,18 +138,41 @@ mod_linking_server <- function(id, rv_data, rv_selections){
       db$list <- rv_data$db_meta$db_list
     })
 
-    # load dataset
+    # update some info
     observe({
       req(input$SI_database_B)
 
       # retrieve all database info
       db$dir_b <- input$SI_database_B
       db$name_b <- names(which(db$list == input$SI_database_B))
+      db$root <- rv_data$db_meta$db_root
 
-      print("Rico: dataset B")
+      # database is not loaded
+      db_loaded(FALSE)
     })
 
-    # activate button
+    # load data set B
+    observeEvent(input$AB_load_B, {
+      req(db$dir_b,
+          db$root)
+
+      # load the data
+      anndata <- anndata::read_h5ad(filename = file.path(db$root, db$dir_b, "db_data.h5ad"))
+      # load some configuration
+      conf_def <- gen_config_table(ad_in = anndata,
+                                   db_name = db$dir_b,
+                                   db_root_path = db$root,
+                                   regenerate = FALSE)
+
+      # not sure if this is a good idea, but for now it's fine
+      rv_data$anndata_b <- anndata
+      rv_data$config_b <- conf_def
+
+      # database is loaded
+      db_loaded(TRUE)
+    })
+
+    # activate button to load data set B if there is a database selected
     observe({
       if (!is.null(db$name_b) ) {
         shinyjs::enable("AB_load_B")
@@ -137,12 +192,7 @@ mod_linking_server <- function(id, rv_data, rv_selections){
                            selected = db$list[1],
                            server = TRUE)
     })
+    #########################################################
 
   }) # end of moduleServer
 }
-
-## To be copied in the UI
-# mod_linking_ui("linking_ui_1")
-
-## To be copied in the server
-# mod_linking_server("linking_ui_1")
