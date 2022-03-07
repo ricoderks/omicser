@@ -43,7 +43,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -99,7 +99,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="03_configuration_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>3-Configuration</h1>
@@ -121,38 +121,38 @@
 <p>Creating the configuration file for a database provides the basic instructions to the browser for how data will be represented to and manipulated by the viewers of the application while browsing. This involves defining the experimental factors as well as visualization parameters.</p>
 <p>The example below matches the PBMC3k. Please see the <a href="https://github.com/ndcn/omicser/tree/main/examples" class="external-link"><code>examples/</code></a> for additional examples (e.g. proteomics).</p>
 <p>We need to specify the <code>omic_type</code>, <code>target_features</code>, and the top-level grouping factors for the features (<code>group_var</code>) and samples (<code>group_obs</code>). These are columns from the meta tables.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># Step 10:  configure browser ----</span></a>
-<a class="sourceLine" id="cb1-2" title="2">omic_type &lt;-<span class="st"> "transcript"</span> <span class="co">#c("transcript","prote","metabol","lipid","other")</span></a>
-<a class="sourceLine" id="cb1-3" title="3">aggregate_by_default &lt;-<span class="st"> </span>(<span class="cf">if</span> (omic_type<span class="op">==</span><span class="st">"transcript"</span>) <span class="ot">TRUE</span> <span class="cf">else</span> <span class="ot">FALSE</span> ) <span class="co">#e.g.  single cell</span></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="co"># choose top 40 proteins by variance across dataset as our "targets"</span></a>
-<a class="sourceLine" id="cb1-5" title="5">target_features &lt;-<span class="st"> </span>adata<span class="op">$</span>var_names[<span class="kw">which</span>(adata<span class="op">$</span>var<span class="op">$</span>var_rank <span class="op">&lt;=</span><span class="st"> </span><span class="dv">40</span>)]</a>
-<a class="sourceLine" id="cb1-6" title="6"></a>
-<a class="sourceLine" id="cb1-7" title="7"><span class="co"># meta-tablel grouping "factors"</span></a>
-<a class="sourceLine" id="cb1-8" title="8">group_obs =<span class="st"> </span><span class="kw">c</span>(<span class="st">"leiden"</span>),</a>
-<a class="sourceLine" id="cb1-9" title="9">group_var =<span class="st"> </span><span class="kw">c</span>(<span class="st">"decile"</span>,<span class="st">"highly_variable"</span>),</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Step 10:  configure browser ----</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>omic_type &lt;-<span class="st"> "transcript"</span> <span class="co">#c("transcript","prote","metabol","lipid","other")</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>aggregate_by_default &lt;-<span class="st"> </span>(<span class="cf">if</span> (omic_type<span class="op">==</span><span class="st">"transcript"</span>) <span class="ot">TRUE</span> <span class="cf">else</span> <span class="ot">FALSE</span> ) <span class="co">#e.g.  single cell</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># choose top 40 proteins by variance across dataset as our "targets"</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>target_features &lt;-<span class="st"> </span>adata<span class="op">$</span>var_names[<span class="kw">which</span>(adata<span class="op">$</span>var<span class="op">$</span>var_rank <span class="op">&lt;=</span><span class="st"> </span><span class="dv">40</span>)]</span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># meta-tablel grouping "factors"</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>group_obs =<span class="st"> </span><span class="kw">c</span>(<span class="st">"leiden"</span>),</span>
+<span id="cb1-9"><a href="#cb1-9"></a>group_var =<span class="st"> </span><span class="kw">c</span>(<span class="st">"decile"</span>,<span class="st">"highly_variable"</span>),</span></code></pre></div>
 <p>Next we’ll specify the data-matrix layers <em>values</em> we have – typically <code>X</code> and <code>raw</code> which are the defaults in the <code>AnnData</code> object – and also the <em>names</em> which will be used for labeling. Default meta-columns as well as a list of annotating columns for giving context to the heatmap visualization.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">  <span class="co"># LAYERS</span></a>
-<a class="sourceLine" id="cb2-2" title="2">  <span class="co"># each layer needs a label/explanation</span></a>
-<a class="sourceLine" id="cb2-3" title="3">  layer_values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"X"</span>,<span class="st">"raw"</span>)</a>
-<a class="sourceLine" id="cb2-4" title="4">  layer_names &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"norm-count"</span>,<span class="st">"counts"</span> )</a>
-<a class="sourceLine" id="cb2-5" title="5">  </a>
-<a class="sourceLine" id="cb2-6" title="6">  <span class="co"># ANNOTATIONS / TARGETS</span></a>
-<a class="sourceLine" id="cb2-7" title="7">  default_obs &lt;-<span class="st">  </span><span class="kw">c</span>(<span class="st">"Condition"</span>,<span class="st">"leiden"</span>) <span class="co">#subset &amp; ordering</span></a>
-<a class="sourceLine" id="cb2-8" title="8">  default_var &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"decile"</span>), <span class="co">#just use them in order as defined</span></a>
-<a class="sourceLine" id="cb2-9" title="9"></a>
-<a class="sourceLine" id="cb2-10" title="10">  obs_annots &lt;-<span class="st"> </span><span class="kw">c</span>( <span class="st">"leiden"</span>,<span class="st">"n_genes"</span>,<span class="st">"n_genes_by_counts"</span>,</a>
-<a class="sourceLine" id="cb2-11" title="11">                  <span class="st">"total_counts"</span>,<span class="st">"total_counts_mt"</span>,<span class="st">"pct_counts_mt"</span>)</a>
-<a class="sourceLine" id="cb2-12" title="12"></a>
-<a class="sourceLine" id="cb2-13" title="13">  var_annots &lt;-<span class="st"> </span><span class="kw">c</span>(</a>
-<a class="sourceLine" id="cb2-14" title="14">    <span class="st">"n_cells"</span>,</a>
-<a class="sourceLine" id="cb2-15" title="15">    <span class="st">"mt"</span>,</a>
-<a class="sourceLine" id="cb2-16" title="16">    <span class="st">"n_cells_by_counts"</span>,</a>
-<a class="sourceLine" id="cb2-17" title="17">    <span class="st">"mean_counts"</span>,</a>
-<a class="sourceLine" id="cb2-18" title="18">    <span class="st">"pct_dropout_by_counts"</span>,</a>
-<a class="sourceLine" id="cb2-19" title="19">    <span class="st">"total_counts"</span>,</a>
-<a class="sourceLine" id="cb2-20" title="20">    <span class="st">"highly_variable"</span>,</a>
-<a class="sourceLine" id="cb2-21" title="21">    <span class="st">"dispersions_norm"</span>,</a>
-<a class="sourceLine" id="cb2-22" title="22">    <span class="st">"decile"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>  <span class="co"># LAYERS</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="co"># each layer needs a label/explanation</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>  layer_values &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"X"</span>,<span class="st">"raw"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a>  layer_names &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"norm-count"</span>,<span class="st">"counts"</span> )</span>
+<span id="cb2-5"><a href="#cb2-5"></a>  </span>
+<span id="cb2-6"><a href="#cb2-6"></a>  <span class="co"># ANNOTATIONS / TARGETS</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>  default_obs &lt;-<span class="st">  </span><span class="kw">c</span>(<span class="st">"Condition"</span>,<span class="st">"leiden"</span>) <span class="co">#subset &amp; ordering</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>  default_var &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"decile"</span>), <span class="co">#just use them in order as defined</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a></span>
+<span id="cb2-10"><a href="#cb2-10"></a>  obs_annots &lt;-<span class="st"> </span><span class="kw">c</span>( <span class="st">"leiden"</span>,<span class="st">"n_genes"</span>,<span class="st">"n_genes_by_counts"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11"></a>                  <span class="st">"total_counts"</span>,<span class="st">"total_counts_mt"</span>,<span class="st">"pct_counts_mt"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12"></a></span>
+<span id="cb2-13"><a href="#cb2-13"></a>  var_annots &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb2-14"><a href="#cb2-14"></a>    <span class="st">"n_cells"</span>,</span>
+<span id="cb2-15"><a href="#cb2-15"></a>    <span class="st">"mt"</span>,</span>
+<span id="cb2-16"><a href="#cb2-16"></a>    <span class="st">"n_cells_by_counts"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17"></a>    <span class="st">"mean_counts"</span>,</span>
+<span id="cb2-18"><a href="#cb2-18"></a>    <span class="st">"pct_dropout_by_counts"</span>,</span>
+<span id="cb2-19"><a href="#cb2-19"></a>    <span class="st">"total_counts"</span>,</span>
+<span id="cb2-20"><a href="#cb2-20"></a>    <span class="st">"highly_variable"</span>,</span>
+<span id="cb2-21"><a href="#cb2-21"></a>    <span class="st">"dispersions_norm"</span>,</span>
+<span id="cb2-22"><a href="#cb2-22"></a>    <span class="st">"decile"</span>)</span></code></pre></div>
 <p>The browser will also render a list of meta-info as you browse individual omic-features in the volcano plot and table views of the <em>playground</em>. These feature details are set as <code>feature_details</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R">  <span class="va">feature_details</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="st">"feature_name"</span>,
