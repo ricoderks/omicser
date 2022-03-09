@@ -14,7 +14,7 @@
 #' @export compute_de_table
 #'
 #' @importFrom stringr str_match
-#' @importFrom tidyselect all_of
+#' @import tidyselect
 #'
 #'
 #' @examples TODO

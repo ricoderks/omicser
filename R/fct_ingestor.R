@@ -11,9 +11,10 @@
 #'
 #' @return list containint config table, defaults list and omics vector
 #'
-#' @noRd
 #' @import data.table
 #' @import RColorBrewer
+#'
+#' @noRd
 gen_config_table <- function(ad_in, db_name, db_root_path, regenerate = FALSE) {
   # load or generate configs..
 

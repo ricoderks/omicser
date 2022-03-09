@@ -79,7 +79,7 @@ mod_pg_table_server <- function(id, rv_data, rv_selections, active_layer_data) {
       omics_idx <- which(rv_data$anndata$var_names %in% omics)
 
       join_data <- rv_data$anndata$var %>%
-                        dplyr::mutate(dplyr::across(tidyselect:::where(is.factor), as.character ))
+                        dplyr::mutate(dplyr::across(where(is.factor), as.character ))
       wide_data <- rv_data$de %>%
                         tidyr::pivot_wider(id_cols = names,
                                             names_from = c(group, reference, test_type),
