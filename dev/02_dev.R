@@ -72,13 +72,13 @@ usethis::use_package("dplyr")
 #usethis::use_package("tidyr") # called by dplyr as dependency?
 #usethis::use_package("magrittr")  # use_pipe()
 usethis::use_package("broom")
-
-# for unit testing
 usethis::use_package( "tidyselect" )
 usethis::use_package( "rlang" )
-usethis::use_package( "testthat" )
 usethis::use_package( "RColorBrewer" )
 
+# for unit testing
+usethis::use_package( "testthat" )
+usethis::use_package( "shinytest" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
