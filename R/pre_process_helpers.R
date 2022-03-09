@@ -168,6 +168,20 @@ pack_anndata_from_csv <- function(data_in){
 
 
 # modified from sceasy original to take advantage of the anndata package
+#' @title Convert seurat data to anndata
+#'
+#' @param obj seurat object
+#' @param outFile output file
+#' @param assay type of assay
+#' @param main_layer main layer
+#' @param transfer_layers transfer layer
+#' @param drop_single_values drop single values
+#'
+#' @importFrom Seurat UpdateSeuratObject GetAssayData Embeddings
+#' @importFrom anndata AnnData
+#' @importFrom utils compareVersion
+#'
+#' @noRd
 seurat2anndata <- function(obj,
                            outFile = NULL,
                            assay = 'RNA',
