@@ -33,7 +33,8 @@ Imports:
     tidyr,
     tidyselect,
     waiter,
-    shinytest
+    shinytest,
+    Seurat
 Authors@R: person('Andy', 'Henrie', email = 'henrie@datatecnica.com', role = c('cre', 'aut'))
 RoxygenNote: 7.1.2
 URL: https://ndcn.github.io/omicser, https://github.com/ndcn/omicser

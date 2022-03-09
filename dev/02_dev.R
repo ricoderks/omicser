@@ -75,6 +75,7 @@ usethis::use_package("broom")
 usethis::use_package( "tidyselect" )
 usethis::use_package( "rlang" )
 usethis::use_package( "RColorBrewer" )
+usethis::use_package( "Seurat" )
 
 # for unit testing
 usethis::use_package( "testthat" )
