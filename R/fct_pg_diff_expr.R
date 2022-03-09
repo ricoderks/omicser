@@ -1,6 +1,36 @@
 #TODO: clean up unused functions / code here
 #
 
+# Color list allowed in plotly
+plotly_colors <- c(
+  "aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque",
+  "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood",
+  "cadetblue", "chartreuse", "chocolate", "coral", "cornflowerblue", "cornsilk",
+  "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray",
+  "darkgreen", "darkgrey", "darkkhaki", "darkmagenta", "darkolivegreen",
+  "darkorange", "darkorchid", "darkred", "darksalmon", "darkseagreen",
+  "darkslateblue", "darkslategray", "darkslategrey", "darkturquoise",
+  "darkviolet", "deeppink", "deepskyblue", "dimgray", "dimgrey", "dodgerblue",
+  "firebrick", "floralwhite", "forestgreen", "fuchsia", "gainsboro",
+  "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow",
+  "grey", "honeydew", "hotpink", "indianred", "indigo", "ivory", "khaki",
+  "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue",
+  "lightcoral", "lightcyan", "lightgoldenrodyellow", "lightgray", "lightgreen",
+  "lightgrey", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue",
+  "lightslategray", "lightslategrey", "lightsteelblue", "lightyellow", "lime",
+  "limegreen", "linen", "magenta", "maroon", "mediumaquamarine", "mediumblue",
+  "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue",
+  "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue",
+  "mintcream", "mistyrose", "moccasin", "navajowhite", "navy", "oldlace",
+  "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod",
+  "palegreen", "paleturquoise", "palevioletred", "papayawhip", "peachpuff",
+  "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown",
+  "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell",
+  "sienna", "silver", "skyblue", "slateblue", "slategray", "slategrey", "snow",
+  "springgreen", "steelblue", "tan", "teal", "thistle", "tomato", "turquoise",
+  "violet", "wheat", "white", "whitesmoke", "yellow", "yellowgreen"
+)
+
 # NOT CALLED/WORKING
 pg_volc_ly <- function(de, title = "") {
 
@@ -211,6 +241,27 @@ volcano_plot <- function(in_data, pvalue_adjust = FALSE, title = "") {
 }
 
 vline <- function(x = 0, color = "blue") {
+  # check if x is a number
+  if(!is.numeric(x)) {
+    stop("'x' is not numerical!")
+  }
+  # check if color is a character
+  if(!is.character(color)) {
+    stop("'color' needs te be a character!")
+  }
+  # is the color a hex code
+  if(!grepl(pattern = "^#.*", x = color)) {
+    # if not, is it in the color list
+    if(!color %in% plotly_colors) {
+      stop("The color supplied to 'color' is not recognized!")
+    }
+  } else {
+    # if so is the HEX code in correct format
+    if(!grepl(pattern = "^#[0-9A-F]{6}$", color)) {
+      stop("HEX color code supplied to 'color' is not correct!")
+    }
+  }
+
   list(
     type = "line",
     y0 = 0,
@@ -225,6 +276,27 @@ vline <- function(x = 0, color = "blue") {
 }
 
 hline <- function(y = 0, color = "blue") {
+  # check if x is a number
+  if(!is.numeric(y)) {
+    stop("'y' is not numerical!")
+  }
+  # check if color is a character
+  if(!is.character(color)) {
+    stop("'color' needs te be a character!")
+  }
+  # is the color a hex code
+  if(!grepl(pattern = "^#.*", x = color)) {
+    # if not, is it in the color list
+    if(!color %in% plotly_colors) {
+      stop("The color supplied to 'color' is not recognized!")
+    }
+  } else {
+    # if so is the HEX code in correct format
+    if(!grepl(pattern = "^#[0-9A-F]{6}$", color)) {
+      stop("HEX color code supplied to 'color' is not correct!")
+    }
+  }
+
   list(
     type = "line",
     x0 = 0,

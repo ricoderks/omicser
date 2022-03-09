@@ -110,6 +110,7 @@ golem::add_module( name = "export" ) # Name of the module
 ## Add one line by test you want to create
 usethis::use_test( "setup-helpers" )
 usethis::use_test( "fct_ingestor" )
+usethis::use_test( "fct_pg_diff_expr" )
 
 # Documentation
 ## Vignette ----
