@@ -53,7 +53,11 @@ mod_pg_table_ui <- function(id){
 #' @param id shiny internal
 #' @param rv_data reactive data
 #' @param rv_selections side selector reactives
+#'
 #' @importFrom DT JS datatable renderDT dataTableProxy selectRows
+#' @importFrom tidyselect where
+#' @importFrom dplyr mutate across
+#'
 #' @noRd
 mod_pg_table_server <- function(id, rv_data, rv_selections, active_layer_data) {
   moduleServer( id, function(input, output, session){
