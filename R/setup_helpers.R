@@ -1,13 +1,16 @@
-
-#' write_config: helper for Writing the Config file for setting up the omicser databases
+#' @title Helper for Writing the Config file for setting up the omicser databases
 #'
 #' @param in_options list of database names, conda environment, and database path
 #' @param in_path where the config file lives. default cwd
 #'
-#' @return
+#' @return Nothing returned, writes to file.
+#'
 #' @export write_config
+#'
 #' @importFrom configr write.config
-#' @examples TODO
+#'
+#' @examples # TODO
+#'
 write_config <- function(in_config, in_path=NULL, set_default=FALSE) {
 
   if ( is.null(in_path) ) {
@@ -38,14 +41,18 @@ write_config <- function(in_config, in_path=NULL, set_default=FALSE) {
 #
 #TODO: check paths in 'app_config.yml' and spawn error if the paths are undefined
 
-#' get_config: helper for reading the Config file containing information about the databases
+#' @title Helper for reading the Config file containing information about the databases
 #'
 #' @param in_path where the config file lives. default getwd() test
 #'
 #' @return the list of options contained in `app_config.yml`
+#'
 #' @export get_config
+#'
 #' @importFrom configr read.config
-#' @examples TODO
+#'
+#' @examples # TODO
+#'
 get_config <- function(in_path = NULL) {
 
   if ( is.null(in_path) ) {
@@ -121,15 +128,20 @@ get_config <- function(in_path = NULL) {
 #
 
 
-#' write_db_meta: helper for writing the database meta info
+#' @title Helper for writing the database meta info
 #'
 #' @param db_meta data to write
 #' @param db_name what is out database is called
 #' @param db_root where the folder lives. default cwd
-#' @return
+#'
+#' @return Nothing returned, writes to file.
+#'
 #' @export write_db_meta
+#'
 #' @importFrom configr write.config
-#' @examples TODO
+#'
+#' @examples # TODO
+#'
 write_db_meta <- function(db_meta,db_name, db_root = NULL) {
 
   if ( is.null(db_root) ) {
@@ -143,15 +155,19 @@ write_db_meta <- function(db_meta,db_name, db_root = NULL) {
 }
 
 
-#' get_db_meta: helper for reading the database meta data
+#' @title Helper for reading the database meta data
 #'
 #' @param db_name what is out db called
 #' @param db_root where the folder lives. default cwd
 #'
 #' @return meta_info: database meta deta
+#'
 #' @export get_db_meta
+#'
 #' @importFrom configr read.config
-#' @examples TODO
+#'
+#' @examples # TODO
+#'
 get_db_meta <- function(db_name, db_root = NULL)  {
 
   if ( is.null(db_root) ) {
@@ -170,15 +186,19 @@ get_db_meta <- function(db_name, db_root = NULL)  {
 #
 
 
-#' write_db_conf: helper for writing the ui config options for the database
+#' @title hHlper for writing the ui config options for the database
 #'
 #' @param config_list the database configuration list
 #' @param db_name what is out database is called
 #' @param db_root where the folder lives. default cwd
-#' @return
+#'
+#' @return Nothing returned, writes to file.
+#'
 #' @export write_db_conf
+#'
 #' @importFrom configr write.config
-#' @examples TODO
+#'
+#' @examples # TODO
 write_db_conf <- function(config_list,db_name, db_root = NULL) {
 
   if ( is.null(db_root) ) {
@@ -193,16 +213,19 @@ write_db_conf <- function(config_list,db_name, db_root = NULL) {
 }
 
 
-
-#' get_db_conf: helper for reading the database config
+#' @title Helper for reading the database config
 #'
 #' @param db_name what is out db called
 #' @param db_root where the folder lives. default cwd
 #'
 #' @return config_list: list of UI configurations for accessing data
+#'
 #' @export get_db_conf
+#'
 #' @importFrom configr read.config
-#' @examples TODO
+#'
+#' @examples # TODO
+#'
 get_db_conf <- function(db_name, db_root = NULL)  {
 
   if ( is.null(db_root) ) {

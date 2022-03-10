@@ -1,12 +1,13 @@
-#' Run the Shiny Application
+#' @title Run the Shiny Application
 #'
-#' @param ... arguments to pass to golem_opts.
-#' See `?golem::get_golem_options` for more details.
+#' @param ... arguments to pass to golem_opts. See `?golem::get_golem_options` for more details.
 #' @inheritParams shiny::shinyApp
 #'
 #' @export
+#'
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
+#'
 run_app <- function(
   onStart = NULL,
   options = list(),
@@ -27,20 +28,10 @@ run_app <- function(
   )
 }
 
-# runApp <- function(appDir=getwd(),
-#                    port=getOption('shiny.port'),
-#                    launch.browser = getOption('shiny.launch.browser', interactive()),
-#                    host=getOption('shiny.host', '127.0.0.1'),
-#                    workerId="", quiet=FALSE,
-#                    display.mode=c("auto", "normal", "showcase"),
-#                    test.mode=getOption('shiny.testmode', FALSE)) {
-
-#' run_in_browser - shortcut to launch in_browser
+#' @title Shortcut to launch in_browser
 #'
-#' @return
 #' @export
 #'
-#' @examples TODO
 run_in_browser <- function(db_root=NULL,database_names=NULL,install_type = "empty",...){
 
   if (is.null(db_root)) db_root <- "UNDEFINED"
@@ -54,13 +45,10 @@ run_in_browser <- function(db_root=NULL,database_names=NULL,install_type = "empt
 }
 
 
-
-#' run_defai;ts - shortcut to launch with default settings.
+#' @title Shortcut to launch with default settings.
 #'
-#' @return
 #' @export
 #'
-#' @examples TODO
 run_defaults <- function(){
   # load yaml and add launch.browser = TRUE to the list
   #
@@ -81,12 +69,10 @@ run_defaults <- function(){
           ) #with = "shinyAppDir"
 }
 
-#'  run_dockers - shortcut to launch with default settings for the docker container
+#' @title Shortcut to launch with default settings for the docker container
 #'
-#' @return
 #' @export
 #'
-#' @examples TODO
 run_docker <- function(){
   # load yaml and add launch.browser = TRUE to the list
   #

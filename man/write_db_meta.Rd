@@ -2,7 +2,7 @@
 % Please edit documentation in R/setup_helpers.R
 \name{write_db_meta}
 \alias{write_db_meta}
-\title{write_db_meta: helper for writing the database meta info}
+\title{Helper for writing the database meta info}
 \usage{
 write_db_meta(db_meta, db_name, db_root = NULL)
 }
@@ -14,11 +14,12 @@ write_db_meta(db_meta, db_name, db_root = NULL)
 \item{db_root}{where the folder lives. default cwd}
 }
 \value{
-
+Nothing returned, writes to file.
 }
 \description{
-write_db_meta: helper for writing the database meta info
+Helper for writing the database meta info
 }
 \examples{
-TODO
+# TODO
+
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/setup_helpers.R
 \name{get_config}
 \alias{get_config}
-\title{get_config: helper for reading the Config file containing information about the databases}
+\title{Helper for reading the Config file containing information about the databases}
 \usage{
 get_config(in_path = NULL)
 }
@@ -13,8 +13,9 @@ get_config(in_path = NULL)
 the list of options contained in `app_config.yml`
 }
 \description{
-get_config: helper for reading the Config file containing information about the databases
+Helper for reading the Config file containing information about the databases
 }
 \examples{
-TODO
+# TODO
+
 }

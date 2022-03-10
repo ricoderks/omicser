@@ -2,16 +2,10 @@
 % Please edit documentation in R/run_app.R
 \name{run_docker}
 \alias{run_docker}
-\title{run_dockers - shortcut to launch with default settings for the docker container}
+\title{Shortcut to launch with default settings for the docker container}
 \usage{
 run_docker()
 }
-\value{
-
-}
 \description{
-run_dockers - shortcut to launch with default settings for the docker container
-}
-\examples{
-TODO
+Shortcut to launch with default settings for the docker container
 }

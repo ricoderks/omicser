@@ -2,7 +2,7 @@
 % Please edit documentation in R/setup_helpers.R
 \name{write_db_conf}
 \alias{write_db_conf}
-\title{write_db_conf: helper for writing the ui config options for the database}
+\title{hHlper for writing the ui config options for the database}
 \usage{
 write_db_conf(config_list, db_name, db_root = NULL)
 }
@@ -14,11 +14,11 @@ write_db_conf(config_list, db_name, db_root = NULL)
 \item{db_root}{where the folder lives. default cwd}
 }
 \value{
-
+Nothing returned, writes to file.
 }
 \description{
-write_db_conf: helper for writing the ui config options for the database
+hHlper for writing the ui config options for the database
 }
 \examples{
-TODO
+# TODO
 }

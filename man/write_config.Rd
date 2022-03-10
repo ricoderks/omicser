@@ -2,7 +2,7 @@
 % Please edit documentation in R/setup_helpers.R
 \name{write_config}
 \alias{write_config}
-\title{write_config: helper for Writing the Config file for setting up the omicser databases}
+\title{Helper for Writing the Config file for setting up the omicser databases}
 \usage{
 write_config(in_config, in_path = NULL, set_default = FALSE)
 }
@@ -12,11 +12,12 @@ write_config(in_config, in_path = NULL, set_default = FALSE)
 \item{in_options}{list of database names, conda environment, and database path}
 }
 \value{
-
+Nothing returned, writes to file.
 }
 \description{
-write_config: helper for Writing the Config file for setting up the omicser databases
+Helper for Writing the Config file for setting up the omicser databases
 }
 \examples{
-TODO
+# TODO
+
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/run_app.R
 \name{run_in_browser}
 \alias{run_in_browser}
-\title{run_in_browser - shortcut to launch in_browser}
+\title{Shortcut to launch in_browser}
 \usage{
 run_in_browser(
   db_root = NULL,
@@ -11,12 +11,6 @@ run_in_browser(
   ...
 )
 }
-\value{
-
-}
 \description{
-run_in_browser - shortcut to launch in_browser
-}
-\examples{
-TODO
+Shortcut to launch in_browser
 }

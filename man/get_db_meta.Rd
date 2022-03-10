@@ -2,7 +2,7 @@
 % Please edit documentation in R/setup_helpers.R
 \name{get_db_meta}
 \alias{get_db_meta}
-\title{get_db_meta: helper for reading the database meta data}
+\title{Helper for reading the database meta data}
 \usage{
 get_db_meta(db_name, db_root = NULL)
 }
@@ -15,8 +15,9 @@ get_db_meta(db_name, db_root = NULL)
 meta_info: database meta deta
 }
 \description{
-get_db_meta: helper for reading the database meta data
+Helper for reading the database meta data
 }
 \examples{
-TODO
+# TODO
+
 }
