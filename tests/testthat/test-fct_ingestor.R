@@ -1,3 +1,6 @@
+# load needed libraries
+require(anndata)
+
 test_that("database conf/def", {
   # load example data
   load(file = test_path("conf_def_example.Rdata"))
