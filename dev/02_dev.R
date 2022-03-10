@@ -77,6 +77,7 @@ usethis::use_package( "rlang" )
 usethis::use_package( "RColorBrewer" )
 usethis::use_package( "Seurat" )
 usethis::use_package( "ggplot2" )
+usethis::use_package( "circlize" )
 
 # for unit testing
 usethis::use_package( "testthat" )

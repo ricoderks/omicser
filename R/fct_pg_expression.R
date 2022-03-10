@@ -1,5 +1,6 @@
 #TODO: clean up unused functions / code here
 
+# define some variables
 
 col_unif = list(c("white", "orange"),
                  c("white", "purple"),
@@ -18,6 +19,15 @@ col_cats8 = list("Accent","Dark2","Pastel2","Set2") #1-8
 
 col_cats <- c(col_cats10,col_cats9,col_cats8)
 
+#' @title Get colors for the top annotations
+#'
+#' @param top_annotations top annotations
+#'
+#' @return colors
+#'
+#' @importFrom circlize colorRamp2
+#' @importFrom RColorBrewer brewer.pal
+#'
 get_my_cols2 <- function(top_annotations){
   # if aggregated don't show top annotations...
   max_levels <- 12
@@ -82,6 +92,32 @@ get_my_cols2 <- function(top_annotations){
   return(top_colors)
 }
 
+
+#' @title Make complex heatmap
+#'
+#' @param in_mat input matrix
+#' @param cluster_samps cluster the samples
+#' @param samp_grp group the samples
+#' @param samp_grp_nm group names of the samples
+#' @param samp_title title of the samples
+#' @param samp_aggregated aggregate the samples
+#' @param samp_split split the samples
+#' @param cluster_feats cluster features
+#' @param feat_grp group the features
+#' @param feat_grp_nm group names of the features
+#' @param feats_title title of the features
+#' @param units_label label of the units
+#' @param omics omics
+#' @param omics_at omics at
+#' @param top_annotations show top annotations
+#' @param right_annotations right annotations
+#'
+#' @return Complex heatmap object
+#'
+#' @importFrom ComplexHeatmap cluster_within_group HeatmapAnnotation rowAnnotation anno_mark Heatmap
+#' @importFrom stats hclust
+#' @importFrom circlize colorRamp2
+#'
 make_cx_heatmap = function(in_mat,
                            cluster_samps, samp_grp, samp_grp_nm, samp_title,samp_aggregated,samp_split,
                            cluster_feats, feat_grp, feat_grp_nm, feats_title,

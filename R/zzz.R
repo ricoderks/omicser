@@ -7,7 +7,6 @@
         "UI",
         "field",
         # make_cx_heatmap
-        "hclust",
         "dist",
         # mod_og_diff_expr_server
         "test_type",
