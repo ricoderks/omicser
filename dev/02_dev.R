@@ -79,7 +79,8 @@ usethis::use_package( "Seurat" )
 
 # for unit testing
 usethis::use_package( "testthat" )
-usethis::use_package( "shinytest" )
+usethis::use_package( "spelling" )
+# usethis::use_package( "shinytest" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
