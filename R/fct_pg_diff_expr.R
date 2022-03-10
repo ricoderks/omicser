@@ -32,6 +32,18 @@ plotly_colors <- c(
 )
 
 # NOT CALLED/WORKING
+#' @title Create plotly volcano plot
+#'
+#' @param de differential expression data
+#' @param title title of the plot
+#'
+#' @return A plotly object
+#'
+#' @importFrom plotly plot_ly add_markers add_annotations layout config
+#' @importFrom htmlwidgets onRender
+#'
+#' @noRd
+#'
 pg_volc_ly <- function(de, title = "") {
 
 
@@ -90,6 +102,18 @@ pg_volc_ly <- function(de, title = "") {
 
 
 # NOT CALLED/WORKING
+#' @title Create plotly volcano plot
+#'
+#' @param de differential expression data
+#' @param title title of the plot
+#'
+#' @return A plotly object
+#'
+#' @importFrom plotly plot_ly add_markers add_annotations layout config event_register
+#' @importFrom htmlwidgets onRender
+#'
+#' @noRd
+#'
 curr_volc_ly <- function(de, title = "") {
 
   # group - the comparison {names}V{reference}

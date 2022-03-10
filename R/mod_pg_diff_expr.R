@@ -67,8 +67,11 @@ mod_pg_diff_expr_ui <- function(id){
 #' @param rv_selections reactives from side select
 #' @param active_layer_data current data matrix
 #'
+#' @importFrom plotly renderPlotly plotlyOutput plot_ly add_markers event_data config layout event_register
+#' @importFrom htmlwidgets onRender
+#'
 #' @noRd
-#' @importFrom plotly renderPlotly plotlyOutput plot_ly add_markers event_data
+#'
 mod_pg_diff_expr_server <- function(id,rv_data, rv_selections, active_layer_data){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
