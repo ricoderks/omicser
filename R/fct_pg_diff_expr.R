@@ -326,9 +326,19 @@ hline <- function(y = 0, color = "blue") {
 }
 
 
-
+#' @title Create a volcano plot with ggplot
+#'
+#' @param in_data data
+#' @param pvalue_adjust use corrected p-values
+#' @param title title of the plot
+#'
+#' @return Returns a ggplot
+#'
+#' @importFrom ggplot2 ggplot aes geom_point theme_minimal scale_color_manual geom_vline geom_hline
+#'
+#' @noRd
 volc_ggplotly <- function(in_data, pvalue_adjust = FALSE, title = "") {
-
+  # Is this function complete?
   # plot adding up all layers we have seen so far
   ggplot(data=de, aes(x=log2FoldChange, y=-log10(pvalue), col=diffexpressed, label=delabel)) +
     geom_point() +
