@@ -117,6 +117,14 @@ mod_ingestor_ui <- function(id) {
 
 
 #' ingestor Server Functions
+#' @param id id
+#' @param input inputs
+#' @param output outputs
+#' @param session session
+#'
+#' @importFrom matrixStats colVars
+#' @importFrom golem get_golem_options
+#' @importFrom shinyFiles shinyDirChoose getVolumes
 #'
 #' @noRd
 mod_ingestor_server <- function(id) {

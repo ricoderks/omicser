@@ -80,6 +80,7 @@ usethis::use_package( "ggplot2" )
 usethis::use_package( "circlize" )
 usethis::use_package( "config" )
 usethis::use_package( "htmlwidgets" )
+usethis::use_package( "matrixStats" )
 
 # for unit testing
 usethis::use_package( "testthat" )
