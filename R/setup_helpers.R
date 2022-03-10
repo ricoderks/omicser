@@ -1,7 +1,8 @@
 #' @title Helper for Writing the Config file for setting up the omicser databases
 #'
-#' @param in_options list of database names, conda environment, and database path
+#' @param in_config list of database names, conda environment, and database path
 #' @param in_path where the config file lives. default cwd
+#' @param set_default set default
 #'
 #' @return Nothing returned, writes to file.
 #'

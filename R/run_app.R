@@ -28,11 +28,23 @@ run_app <- function(
   )
 }
 
+
 #' @title Shortcut to launch in_browser
+#'
+#' @description Run the app in the browser instead of Rstudio when started
+#'     from Rstudio.
+#'
+#' @param db_root root path of the database
+#' @param database_names names of all databases
+#' @param install_type install type
+#' @param ... parameters to pass to `run_app`
 #'
 #' @export
 #'
-run_in_browser <- function(db_root=NULL,database_names=NULL,install_type = "empty",...){
+run_in_browser <- function(db_root = NULL,
+                           database_names = NULL,
+                           install_type = "empty",
+                           ...){
 
   if (is.null(db_root)) db_root <- "UNDEFINED"
   if (is.null(database_names)) database_names <- list(UNDEFINED="UNDEFINED")

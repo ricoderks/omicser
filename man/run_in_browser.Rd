@@ -11,6 +11,16 @@ run_in_browser(
   ...
 )
 }
+\arguments{
+\item{db_root}{root path of the database}
+
+\item{database_names}{names of all databases}
+
+\item{install_type}{install type}
+
+\item{...}{parameters to pass to `run_app`}
+}
 \description{
-Shortcut to launch in_browser
+Run the app in the browser instead of Rstudio when started
+    from Rstudio.
 }

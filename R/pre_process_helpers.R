@@ -247,10 +247,9 @@ seurat2anndata <- function(obj,
 }
 
 
-
 #' @title pack_anndata_from_seurat
 #'
-#' @param seurat_obj
+#' @param seurat_obj_name seurat object name
 #'
 #' @return adata the anndata object we are browsing
 #'
@@ -326,9 +325,6 @@ pack_anndata_from_seurat <- function(seurat_obj_name){
 
   return(adata)
 }
-
-
-
 
 
 #' setup_database
