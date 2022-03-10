@@ -21,7 +21,6 @@ Imports:
     magrittr,
     markdown,
     Matrix,
-    RColorBrewer,
     plotly,
     rlang,
     rmarkdown,
