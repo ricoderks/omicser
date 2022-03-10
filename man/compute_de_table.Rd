@@ -2,7 +2,7 @@
 % Please edit documentation in R/pre_process_helpers.R
 \name{compute_de_table}
 \alias{compute_de_table}
-\title{compute_de_table = helper function to create differential expression table}
+\title{Helper function to create differential expression table}
 \usage{
 compute_de_table(adata, comp_types, test_types, obs_names, sc)
 }
@@ -21,8 +21,9 @@ compute_de_table(adata, comp_types, test_types, obs_names, sc)
 diff_exp, differential expression table
 }
 \description{
-compute_de_table = helper function to create differential expression table
+Helper function to create differential expression table
 }
 \examples{
-TODO
+# TODO
+
 }

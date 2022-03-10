@@ -2,7 +2,7 @@
 #
 
 
-#' compute_de_table = helper function to create differential expression table
+#' @title Helper function to create differential expression table
 #'
 #' @param adata the anndata object
 #' @param comp_types what kind of comparisons?  `allVrest` or `a V b`
@@ -11,13 +11,15 @@
 #' @param sc scanpy
 #'
 #' @return diff_exp, differential expression table
+#'
 #' @export compute_de_table
 #'
 #' @importFrom stringr str_match
 #' @import tidyselect
 #'
 #'
-#' @examples TODO
+#' @examples # TODO
+#'
 compute_de_table <- function(adata,comp_types, test_types, obs_names,sc) {
   # this should update adata in place with the diff_exp data...
   diff_exp <- data.frame()
@@ -76,14 +78,16 @@ compute_de_table <- function(adata,comp_types, test_types, obs_names,sc) {
 
 
 
-#' pack_anndata
+#' @title pack_anndata
 #'
 #' @param data_in - list of matrices, tables, and lists containing the data to pack into the db
 #'
 #' @return adata the anndata object we are browsing
+#'
 #' @export pack_anndata_from_csv
 #'
-#' @examples  TODO
+#' @examples  # TODO
+#'
 pack_anndata_from_csv <- function(data_in){
 
   #tools::file_path_sans_ext(data_in)
@@ -148,11 +152,17 @@ pack_anndata_from_csv <- function(data_in){
 }
 
 
-
-
 # sceasy functions rewritten here for simplicity (Bioconductor deps are killing me)
 # COPIED FROM https://github.com/cellgeni/sceasy/blob/master/R/functions.R
-
+#' @title reguralise data.frame
+#'
+#' @param df data.frame
+#' @param drop_single_values drop single values
+#'
+#' @return data.frame
+#'
+#' @noRd
+#'
 .regularise_df <- function(df, drop_single_values = TRUE) {
   if (ncol(df) == 0) df[['name']] <- rownames(df)
   if (drop_single_values) {
@@ -177,11 +187,14 @@ pack_anndata_from_csv <- function(data_in){
 #' @param transfer_layers transfer layer
 #' @param drop_single_values drop single values
 #'
+#' @return anndata object
+#'
 #' @importFrom Seurat UpdateSeuratObject GetAssayData Embeddings
 #' @importFrom anndata AnnData
 #' @importFrom utils compareVersion
 #'
 #' @noRd
+#'
 seurat2anndata <- function(obj,
                            outFile = NULL,
                            assay = 'RNA',
@@ -235,14 +248,18 @@ seurat2anndata <- function(obj,
 
 
 
-#' pack_anndata_from_seurat
+#' @title pack_anndata_from_seurat
 #'
 #' @param seurat_obj
 #'
 #' @return adata the anndata object we are browsing
+#'
 #' @export pack_anndata_from_seurat
 #'
-#' @examples  TODO
+#' @importFrom dplyr mutate relocate
+#'
+#' @examples # TODO
+#'
 pack_anndata_from_seurat <- function(seurat_obj_name){
 
 
@@ -324,9 +341,11 @@ pack_anndata_from_seurat <- function(seurat_obj_name){
 #' @description A a function to create the anndata database
 #'
 #' @return The return value, if any, from executing the function.
+#'
 #' @export setup_database
 #'
-#' @examples  TODO
+#' @examples # TODO
+#'
 setup_database <- function(database_name, db_path, data_in, re_pack=TRUE){
   #LOAD & PACK into ANNDATA
   ##if data_in contains filenames they must be the full path (i.e. RAW_DIR inlcuded)

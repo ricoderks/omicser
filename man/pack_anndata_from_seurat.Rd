@@ -16,5 +16,6 @@ adata the anndata object we are browsing
 pack_anndata_from_seurat
 }
 \examples{
- TODO
+# TODO
+
 }
