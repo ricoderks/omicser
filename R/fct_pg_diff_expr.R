@@ -240,6 +240,13 @@ volcano_plot <- function(in_data, pvalue_adjust = FALSE, title = "") {
   return(p)
 }
 
+#' @title Create vertical line in plotly plot
+#'
+#' @param x at what position on the x-axis
+#' @param color color of the line
+#'
+#' @return Returns a list with all the settigns needed
+#'
 vline <- function(x = 0, color = "blue") {
   # check if x is a number
   if(!is.numeric(x)) {
@@ -275,6 +282,14 @@ vline <- function(x = 0, color = "blue") {
   )
 }
 
+
+#' @title Create horizontal line in plotly plot
+#'
+#' @param y at what position on the y-axis
+#' @param color color of the line
+#'
+#' @return Returns a list with all the settigns needed
+#'
 hline <- function(y = 0, color = "blue") {
   # check if x is a number
   if(!is.numeric(y)) {
