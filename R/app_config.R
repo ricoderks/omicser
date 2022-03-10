@@ -20,6 +20,8 @@ app_sys <- function(...){
 #' If unset, "default".
 #' @param use_parent Logical, scan the parent directory for config file.
 #'
+#' @importFrom config get
+#'
 #' @noRd
 get_golem_config <- function(
   value,
