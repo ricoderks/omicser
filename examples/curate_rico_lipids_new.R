@@ -159,7 +159,7 @@ data_matrix[which(is.na(data_matrix), arr.ind = TRUE)] <- 0
 
 ### Variables
 # add lipid class information
-lipid_info_df$lipid_class <- extract_lipid_class(lipid_names = lipid_info_df$lipid_name)
+# lipid_info_df$lipid_class <- extract_lipid_class(lipid_names = lipid_info_df$lipid_name)
 
 # calculate the mean and variance for the variables
 lipid_info_df$mean <- colMeans(x = data_matrix,
@@ -334,7 +334,7 @@ omicser::write_db_conf(config_list = config_list,
 
 #==== 8. write data file to load  =========================================================================
 # write the database
-ad $write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "db_data.h5ad"))
+ad$write_h5ad(filename = file.path(DB_ROOT_PATH, DB_NAME, "db_data.h5ad"))
 
 # BOOTSTRAP the options we have already set up...
 # NOTE: we are looking in the "quickstart" folder.  the default is to look for the config in with default getwd()
