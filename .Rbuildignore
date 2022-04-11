@@ -21,3 +21,5 @@ $run_dev.*
 ^\.github$
 ^Dockerfile\.2$
 docker_stuff/
+.pyenv/
+examples/raw_data/
